@@ -11,6 +11,7 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html,body{min-height:100%;width:100%;background:#050914}
 body{
  min-height:100vh;min-height:100dvh;padding:24px 14px 100px;
@@ -28,21 +29,29 @@ header{text-align:center;margin:10px auto 28px}
 header p{margin-top:8px;color:#98a8c1;font-size:11px;letter-spacing:3px}
 .rule{width:86px;height:3px;border-radius:9px;background:#ffc928;margin:16px auto 0;box-shadow:0 0 18px #ffc92866}
 
-.admin-banner{
- width:100%;max-width:760px;margin:0 auto 18px;padding:12px 16px;
- display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
- border:1px solid #ffc928;border-radius:14px;
- background:linear-gradient(145deg,#2a2010,#1a1408);
- color:#ffc928;font-weight:800;font-size:13px;letter-spacing:1px
+/* Éléments éditables — protection anti-sélection & anti-callout */
+[data-edit]{
+ cursor:pointer;
+ -webkit-tap-highlight-color:transparent;
+ -webkit-touch-callout:none;
+ user-select:none;
+ -webkit-user-select:none;
+ touch-action:manipulation;
+ transition:background .15s,outline-color .15s;
+ border-radius:8px;
+ padding:3px 6px;
+ margin:-3px -6px;
+ outline:2px solid transparent;
+ outline-offset:2px
 }
-.admin-banner .label{flex:1;min-width:140px}
-.admin-banner .actions{display:flex;gap:8px;flex-wrap:wrap}
-.admin-banner button{
- border:1px solid #ffc928;background:#101522;color:#ffc928;
- padding:8px 12px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;
- white-space:nowrap
+.admin-active [data-edit]{
+ background:rgba(255,201,40,.05);
+ outline-color:rgba(255,201,40,.25)
 }
-.admin-banner button.copy{background:#ffc928;color:#101522}
+.admin-active [data-edit]:hover{
+ background:rgba(255,201,40,.15);
+ outline-color:rgba(255,201,40,.6)
+}
 
 .menu{
  width:100%;max-width:760px;margin:auto;display:grid;
@@ -67,14 +76,31 @@ header p{margin-top:8px;color:#98a8c1;font-size:11px;letter-spacing:3px}
  display:block;text-align:center;padding:14px 6px;color:#ffc928;
  font-weight:800;letter-spacing:1.2px;font-size:clamp(12px,3vw,15px);pointer-events:none
 }
-.add-category-btn{
- display:block;width:100%;max-width:760px;margin:16px auto 0;
- padding:18px;border:2px dashed #ffc92866;border-radius:17px;
- background:transparent;color:#ffc928;font-weight:900;
- font-size:14px;letter-spacing:1.5px;cursor:pointer;
- transition:background .2s,border-color .2s
+
+.add-cat-card{
+ appearance:none;display:block;width:100%;
+ border:2px dashed #ffc92866;border-radius:17px;
+ background:linear-gradient(145deg,#14243a33,#0a112033);
+ cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;
+ transition:border-color .2s,background .2s,transform .2s;
+ color:#ffc928
 }
-.add-category-btn:hover{background:#ffc92811;border-color:#ffc928}
+.add-cat-card:hover{border-color:#ffc928;background:#ffc92811}
+.add-cat-card:active{transform:scale(.97)}
+.add-cat-card .inner{
+ aspect-ratio:1/1;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:6px
+}
+.add-cat-card .plus{
+ font-size:clamp(52px,13vw,76px);
+ font-weight:200;line-height:1;font-family:Arial,sans-serif
+}
+.add-cat-card .label{
+ font-size:clamp(11px,2.8vw,13px);
+ font-weight:800;letter-spacing:1.5px
+}
+
 .empty-menu{
  grid-column:1/-1;text-align:center;color:#7a8aa3;
  font-size:13px;padding:40px 20px;letter-spacing:1px;line-height:1.8
@@ -92,13 +118,36 @@ header p{margin-top:8px;color:#98a8c1;font-size:11px;letter-spacing:3px}
  display:inline-flex;align-items:center;justify-content:center;background:#101522;color:#ffc928;
  border-radius:99px;min-width:24px;height:24px;margin-left:7px;padding:0 6px
 }
+
+.admin-float{
+ position:fixed;left:16px;bottom:calc(20px + env(safe-area-inset-bottom));
+ z-index:40;
+ display:flex;flex-direction:column;gap:10px
+}
+.admin-float button{
+ width:52px;height:52px;border-radius:50%;
+ border:1px solid #ffc928;background:#101522;color:#ffc928;
+ font-size:22px;cursor:pointer;box-shadow:0 6px 25px #0009;
+ display:flex;align-items:center;justify-content:center;
+ padding:0;-webkit-tap-highlight-color:transparent;
+ transition:transform .15s,background .15s
+}
+.admin-float button:active{transform:scale(.92)}
+.admin-float button.copy{background:#ffc928;color:#101522}
+.admin-float button.copy:hover{filter:brightness(1.08)}
+
 .location-card{
  width:100%;max-width:760px;margin:24px auto 0;padding:18px;border:1px solid #253751;
  border-radius:18px;background:linear-gradient(145deg,#14243a,#0a1120);
  text-align:center;box-shadow:0 12px 28px #0005
 }
 .location-card h2{font-size:18px;color:#ffc928;margin-bottom:8px;letter-spacing:1px}
-.location-card p{font-size:13px;line-height:1.6;color:#aab8ce;margin-bottom:14px}
+.location-card p{font-size:13px;line-height:1.6;color:#aab8ce}
+.location-card .find-name{
+ color:#f6f8fc;font-weight:800;
+ letter-spacing:1px;margin-bottom:4px;display:inline-block
+}
+.location-card .find-address{display:inline-block;margin-bottom:14px}
 .location-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .location-link{
  display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;
@@ -107,7 +156,15 @@ header p{margin-top:8px;color:#98a8c1;font-size:11px;letter-spacing:3px}
 }
 .location-link.primary-full{grid-column:1 / -1}
 .location-link.secondary{background:#101a2b;color:#f6f8fc;border-color:#344762}
-footer{text-align:center;color:#71829d;font-size:10px;letter-spacing:2px;margin:28px auto 0}
+footer{text-align:center;color:#71829d;font-size:10px;letter-spacing:2px;margin:28px auto 0;display:inline-block}
+footer[data-edit]{display:inline-block}
+body>footer{display:block}
+footer[data-edit]{
+ color:#71829d;font-size:10px;letter-spacing:2px;
+ display:inline-block;margin:28px auto 0
+}
+body>footer[data-edit]{display:table;margin-left:auto;margin-right:auto}
+
 #toast{
  position:fixed;left:50%;bottom:90px;transform:translate(-50%,18px);opacity:0;
  pointer-events:none;background:#ffc928;color:#101522;padding:12px 20px;border-radius:12px;
@@ -139,6 +196,7 @@ footer{text-align:center;color:#71829d;font-size:10px;letter-spacing:2px;margin:
  width:100%;border:1px solid #344862;background:#08111f;color:#fff;
  border-radius:10px;padding:12px;font-size:15px;outline:none
 }
+textarea.customer-input{font-family:inherit;resize:vertical;min-height:44px}
 .modal-content select:focus,.customer-input:focus,.admin-input:focus{border-color:#ffc928}
 .customer-input.invalid{border-color:#ff6b6b;box-shadow:0 0 0 2px #ff6b6b33}
 .price-row{
@@ -240,6 +298,38 @@ body.modal-open{overflow:hidden}
 .img-upload-btn:hover{background:#1f3050}
 .upload-status{font-size:12px;margin-top:8px;min-height:16px;font-weight:700}
 
+.confirm-icon{
+ font-size:44px;text-align:center;margin-bottom:8px;line-height:1
+}
+.confirm-message{
+ color:#c5d0e1;font-size:14px;line-height:1.5;margin:10px 0 18px;
+ text-align:center;word-break:break-word
+}
+
+/* Modal édition : icône + valeur actuelle */
+.edit-header{
+ display:flex;align-items:center;gap:12px;margin-bottom:6px
+}
+.edit-header .edit-emoji{
+ width:44px;height:44px;flex-shrink:0;
+ border-radius:12px;background:#1a2437;border:1px solid #334764;
+ display:flex;align-items:center;justify-content:center;
+ font-size:22px;line-height:1
+}
+.edit-header .edit-titles{flex:1;min-width:0}
+.edit-header .edit-titles h2{
+ font-size:18px;margin:0;color:#ffc928;line-height:1.2
+}
+.edit-header .edit-titles .edit-sub{
+ font-size:11px;color:#98a8c1;margin-top:2px;letter-spacing:.5px
+}
+.current-value{
+ padding:10px 12px;margin-top:6px;border-radius:10px;
+ background:#06101e;border:1px solid #1e2c42;
+ font-size:12px;color:#98a8c1;line-height:1.4;word-break:break-word
+}
+.current-value b{color:#c5d0e1;font-weight:700}
+
 @media(min-width:620px){.menu{grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}.dish .dish-name{padding:15px 5px}}
 @media(max-height:700px){.modal-image{height:150px}.modal-content{padding:15px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -249,38 +339,37 @@ body.modal-open{overflow:hidden}
 <link rel="apple-touch-icon" href="icon.png">
 </head>
 
-<body class="">
+<body class="admin-active">
 <header>
-  <div class="logo" id="secretAdminTrigger" title="ILYM PIZZA">ILYM <b>PIZZA</b></div>
-  <p>FRESH FOOD · GOOD MOOD</p>
+  <div class="logo" id="secretAdminTrigger" title="ILYM PIZZA">
+    <span data-edit="logoLeft">Kesra</span> <b data-edit="logoRight">King</b>
+  </div>
+  <p data-edit="tagline">FRESH FOOD · GOOD MOOD</p>
   <div class="rule"></div>
 </header>
-
-<div class="admin-banner" id="adminBanner" hidden="">
-  <span class="label">🔓 Mode administrateur actif</span>
-  <div class="actions">
-    <button type="button" class="copy" id="copyHtmlBtn">📋 Copier HTML</button>
-    <button type="button" id="logoutAdmin">Quitter</button>
-  </div>
-</div>
 
 <div class="cart-bar">
   <button id="openCart" type="button">🛒 Voir le panier <span id="cartCount">0</span></button>
 </div>
 
+<div class="admin-float" id="adminFloat" hidden="">
+  <button type="button" class="copy" id="copyHtmlBtn" title="Copier HTML de l'app">📋</button>
+  <button type="button" id="logoutAdmin" title="Quitter le mode admin">🔒</button>
+</div>
+
 <main class="menu" id="mainMenu"></main>
-<button class="add-category-btn" id="addCategoryBtn" type="button" hidden="">+ AJOUTER UNE CATÉGORIE</button>
 
 <section class="location-card" aria-label="Localisation du restaurant">
-  <h2>📍 NOUS TROUVER</h2>
-  <p>ILYM PIZZA<br>CF7G+M24, Dahmouni, Tiaret, Algérie</p>
+  <h2 data-edit="findTitle">📍 NOUS TROUVER</h2>
+  <p class="find-name" data-edit="findName">ILYM PIZZA</p>
+  <p class="find-address" data-edit="findAddress">ILYM PIZZA<br>CF7G+M24, Dahmouni, Tiaret, Algérie</p>
   <div class="location-actions">
-    <a class="location-link primary-full" href="https://www.google.com/maps/dir/?api=1&amp;destination=CF7G%2BM24%2C%20Dahmouni%2C%20Algeria" target="_blank" rel="noopener noreferrer">🧭 Itinéraire Google Maps</a>
-    <a class="location-link secondary" href="https://wa.me/213674817474" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-    <a class="location-link secondary" href="tel:+213674817474">📞 Appeler</a>
+    <a class="location-link primary-full" data-edit="mapsDest" href="https://www.google.com/maps/dir/?api=1&amp;destination=CF7G%2BM24%2C%20Dahmouni%2C%20Algeria" target="_blank" rel="noopener noreferrer">🧭 Itinéraire Google Maps</a>
+    <a class="location-link secondary" data-edit="phone" href="https://wa.me/213674817474" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+    <a class="location-link secondary" data-edit="phone" href="tel:+213674817474">📞 Appeler</a>
   </div>
 </section>
-<footer>ILYM PIZZA · BON APPÉTIT</footer>
+<footer data-edit="footer">ILYM PIZZA · BON APPÉTIT</footer>
 <div id="toast" role="status" aria-live="polite" class=""></div>
 
 <!-- Modal Panier -->
@@ -379,13 +468,13 @@ body.modal-open{overflow:hidden}
         <label class="img-upload-btn" for="catImageFile">📁 Galerie</label>
         <input id="catImageFile" type="file" accept="image/*" style="display:none">
       </div>
-      <div id="imgUploadStatus" class="upload-status" style="color: rgb(37, 211, 102);">✅ Image uploadée avec succès</div>
+      <div id="imgUploadStatus" class="upload-status"></div>
 
       <label for="catDesc">Description (facultatif)</label>
       <input id="catDesc" class="customer-input" placeholder="Ex : Choisissez votre recette" maxlength="200">
 
       <label>Éléments / options <span class="required-star">*</span></label>
-      <div id="catOptionsList"><div class="opt-row"><div class="opt-info"><strong>Bbxvxhx</strong><small>200 DA</small></div><div class="opt-actions"><button type="button" title="Modifier">✏️</button><button type="button" title="Supprimer">🗑️</button></div></div><div class="opt-row"><div class="opt-info"><strong>Bdjdkdj</strong><small>30 DA</small></div><div class="opt-actions"><button type="button" title="Modifier">✏️</button><button type="button" title="Supprimer">🗑️</button></div></div></div>
+      <div id="catOptionsList"></div>
 
       <div class="option-add-form">
         <input id="newOptLabel" class="customer-input" placeholder="Nom de l'élément (ex : Poulet)" maxlength="80">
@@ -401,6 +490,48 @@ body.modal-open{overflow:hidden}
   </section>
 </div>
 
+<!-- Modal Édition Texte générique (admin) -->
+<div class="modal" id="editModal" aria-hidden="true">
+  <div class="modal-backdrop" data-edit-close="true"></div>
+  <section class="modal-card admin-card" role="dialog" aria-modal="true">
+    <button class="close" type="button" id="closeEdit" aria-label="Fermer">×</button>
+    <div class="modal-content">
+      <div class="edit-header">
+        <div class="edit-emoji" id="editEmoji">✨</div>
+        <div class="edit-titles">
+          <h2 id="editTitle">Signature du haut</h2>
+          <div class="edit-sub" id="editSub">Sous-titre sous le logo</div>
+        </div>
+      </div>
+
+      <label for="editField" id="editLabel">Contenu</label>
+      <textarea id="editField" class="customer-input" rows="1"></textarea>
+      <p id="editHint" class="small-note" style="margin-top: 8px; display: block;">Ex : FRESH FOOD · GOOD MOOD</p>
+
+      <div class="current-value" id="editCurrentWrap" style="display: block;">
+        <b>Valeur actuelle :</b> <span id="editCurrent">FRESH FOOD · GOOD MOOD</span>
+      </div>
+
+      <button class="admin-button" id="saveEditBtn" type="button">✅ Enregistrer</button>
+      <button class="admin-button secondary" id="cancelEditBtn" type="button">Annuler</button>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Confirmation interne -->
+<div class="modal" id="confirmModal" aria-hidden="true">
+  <div class="modal-backdrop" data-confirm-close="true"></div>
+  <section class="modal-card admin-card" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="confirm-icon" id="confirmIcon">⚠️</div>
+      <h2 id="confirmTitle" style="text-align:center">Êtes-vous sûr ?</h2>
+      <p class="confirm-message" id="confirmMessage"></p>
+      <button class="admin-button danger" id="confirmYes" type="button">Oui, confirmer</button>
+      <button class="admin-button secondary" id="confirmNo" type="button">Annuler</button>
+    </div>
+  </section>
+</div>
+
 <script>
 /* ============ CONFIG ============ */
 const ADMIN_CODE = '1747';
@@ -408,9 +539,10 @@ const DELIVERY_FEE = 100;
 const NTFY_TOPIC = 'testo';
 const NTFY_URL = 'https://ntfy.sh/' + NTFY_TOPIC;
 const STORAGE_KEY = 'ilym_menu_data_v1';
+const SETTINGS_KEY = 'ilym_settings_v1';
 const IMGBB_API_KEY = '866d37daa3dd85b9b58e1a3a55524546';
 
-/* ============ DONNÉES PAR DÉFAUT ============ */
+/* ============ DONNÉES PAR DÉFAUT (VIDES) ============ */
 /*__DEFAULT_MENU_START__*/
 const DEFAULT_MENU = [
  {
@@ -675,82 +807,6 @@ const DEFAULT_MENU = [
   ]
  },
  {
-  "id": "cat_sandwich",
-  "name": "Sandwich",
-  "image": "https://i.ibb.co/nqMnsPSs/Pizza-Baciata-1.jpg",
-  "desc": "Sandwich grillé — choisissez votre recette.",
-  "options": [
-   {
-    "id": "opt_s1",
-    "label": "Spécial poulet haché",
-    "price": 250
-   },
-   {
-    "id": "opt_s2",
-    "label": "Spécial viande hachée",
-    "price": 300
-   },
-   {
-    "id": "opt_s3",
-    "label": "Mariné",
-    "price": 300
-   },
-   {
-    "id": "opt_s4",
-    "label": "Foie en sauce",
-    "price": 300
-   },
-   {
-    "id": "opt_s5",
-    "label": "Merguez en sauce",
-    "price": 350
-   },
-   {
-    "id": "opt_s6",
-    "label": "Mixte",
-    "price": 400
-   }
-  ]
- },
- {
-  "id": "cat_boissons",
-  "name": "Boissons",
-  "image": "https://i.ibb.co/xSVz2Zdg/f444108c3c165005c9e2fc3e76975e65.jpg",
-  "desc": "Choisissez votre boisson fraîche.",
-  "options": [
-   {
-    "id": "opt_bo1",
-    "label": "Jus",
-    "price": 70
-   },
-   {
-    "id": "opt_bo2",
-    "label": "Gaz",
-    "price": 70
-   },
-   {
-    "id": "opt_bo3",
-    "label": "L'eau",
-    "price": 30
-   },
-   {
-    "id": "opt_bo4",
-    "label": "Jus 1L",
-    "price": 150
-   },
-   {
-    "id": "opt_bo5",
-    "label": "Gaz 1L",
-    "price": 150
-   },
-   {
-    "id": "opt_bo6",
-    "label": "L'eau 1.5L",
-    "price": 50
-   }
-  ]
- },
- {
   "id": "cat_mv8k8j3fj6hr3",
   "name": "Ttt",
   "image": "https://i.ibb.co/YF7LL8YJ/1000128366.jpg",
@@ -771,6 +827,21 @@ const DEFAULT_MENU = [
 ];
 /*__DEFAULT_MENU_END__*/
 
+/* ============ PARAMÈTRES PAR DÉFAUT ============ */
+/*__DEFAULT_SETTINGS_START__*/
+const DEFAULT_SETTINGS = {
+ "logoLeft": "Kesra",
+ "logoRight": "King",
+ "tagline": "FRESH FOOD · GOOD MOOD",
+ "findTitle": "📍 NOUS TROUVER",
+ "findName": "ILYM PIZZA",
+ "findAddress": "ILYM PIZZA\nCF7G+M24, Dahmouni, Tiaret, Algérie",
+ "footer": "ILYM PIZZA · BON APPÉTIT",
+ "phone": "213674817474",
+ "mapsDest": "CF7G+M24, Dahmouni, Algeria"
+};
+/*__DEFAULT_SETTINGS_END__*/
+
 /* ============ OUTILS ============ */
 const toast = document.getElementById('toast');
 let toastTimer;
@@ -784,8 +855,9 @@ function uid(p){ return p + '_' + Date.now().toString(36) + Math.random().toStri
 function fmt(n){ return Number(n).toLocaleString('fr-FR'); }
 
 /* ============ ÉTAT ============ */
-let isAdmin = false;              /* TOUJOURS false au chargement */
+let isAdmin = false;
 let menuData = loadMenu();
+let settings = loadSettings();
 
 function loadMenu(){
   try{
@@ -800,6 +872,54 @@ function loadMenu(){
 function saveMenu(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(menuData)); }
   catch(e){ showToast('Sauvegarde impossible'); }
+}
+
+function loadSettings(){
+  const def = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+  try{
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object') return Object.assign(def, parsed);
+    }
+  }catch(e){}
+  return def;
+}
+function saveSettings(){
+  try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+  catch(e){ showToast('Sauvegarde impossible'); }
+}
+
+/* ============ APPLIQUER LES PARAMÈTRES ============ */
+function applySettings(){
+  const header = document.querySelector('header');
+  header.querySelector('[data-edit="logoLeft"]').textContent = settings.logoLeft;
+  header.querySelector('[data-edit="logoRight"]').textContent = settings.logoRight;
+  header.querySelector('[data-edit="tagline"]').textContent = settings.tagline;
+
+  const card = document.querySelector('.location-card');
+  card.querySelector('[data-edit="findTitle"]').textContent = settings.findTitle;
+  card.querySelector('[data-edit="findName"]').textContent = settings.findName;
+
+  const addrEl = card.querySelector('[data-edit="findAddress"]');
+  addrEl.replaceChildren();
+  String(settings.findAddress).split('\n').forEach((line, i)=>{
+    if(i > 0) addrEl.appendChild(document.createElement('br'));
+    addrEl.appendChild(document.createTextNode(line));
+  });
+
+  document.querySelector('footer').textContent = settings.footer;
+
+  const wa = card.querySelector('a[href*="wa.me"]');
+  const call = card.querySelector('a[href^="tel:"]');
+  const maps = card.querySelector('a[href*="google.com/maps"]');
+
+  wa.href = 'https://wa.me/' + settings.phone;
+  call.href = 'tel:+' + settings.phone;
+  const mapsBase = maps.href.includes('/dir/')
+    ? 'https://www.google.com/maps/dir/?api=1&destination='
+    : 'https://www.google.com/maps/search/?api=1&query=';
+  maps.href = mapsBase + encodeURIComponent(settings.mapsDest);
 }
 
 /* ============ NTFY ============ */
@@ -830,6 +950,57 @@ async function uploadToImgbb(file){
   return data.data.url;
 }
 
+/* ============ GUARD : éviter la fermeture immédiate après ouverture ============
+   Sur mobile, le pointerup/click résiduel qui suit un appui long peut atterrir
+   sur le backdrop de la modale qui vient de s'ouvrir → fermeture instantanée.
+   Ce guard ignore les clics sur le backdrop pendant 500ms après ouverture.
+*/
+const modalGuards = new WeakMap();
+function openGuarded(mod){
+  mod.classList.add('open');
+  mod.setAttribute('aria-hidden','false');
+  modalGuards.set(mod, Date.now());
+  document.body.classList.add('modal-open');
+}
+function guardedClose(mod, e){
+  const t = modalGuards.get(mod);
+  if(t && (Date.now() - t < 500)){
+    e.preventDefault();
+    e.stopPropagation();
+    return true;
+  }
+  return false;
+}
+
+/* ============ CONFIRMATION INTERNE ============ */
+const confirmModal = document.getElementById('confirmModal');
+let confirmCallback = null;
+
+function showConfirm({ title, message, icon, confirmLabel, onYes }){
+  document.getElementById('confirmIcon').textContent = icon || '⚠️';
+  document.getElementById('confirmTitle').textContent = title || 'Êtes-vous sûr ?';
+  document.getElementById('confirmMessage').textContent = message || '';
+  document.getElementById('confirmYes').textContent = confirmLabel || 'Oui, confirmer';
+  confirmCallback = onYes;
+  openGuarded(confirmModal);
+}
+function closeConfirm(){
+  confirmModal.classList.remove('open');
+  confirmModal.setAttribute('aria-hidden','true');
+  refreshBodyLock();
+  confirmCallback = null;
+}
+document.getElementById('confirmYes').addEventListener('click', ()=>{
+  const cb = confirmCallback;
+  closeConfirm();
+  if(cb) setTimeout(cb, 120);
+});
+document.getElementById('confirmNo').addEventListener('click', closeConfirm);
+confirmModal.addEventListener('click', e=>{
+  if(guardedClose(confirmModal, e)) return;
+  if(e.target.dataset.confirmClose === 'true') closeConfirm();
+});
+
 /* ============ RENDU DU MENU ============ */
 function renderMenu(){
   const grid = document.getElementById('mainMenu');
@@ -839,12 +1010,10 @@ function renderMenu(){
     ? menuData
     : menuData.filter(c => c.options && c.options.length > 0);
 
-  if(!cats.length){
+  if(!cats.length && !isAdmin){
     const p = document.createElement('p');
     p.className = 'empty-menu';
-    p.textContent = isAdmin
-      ? "Aucune catégorie. Cliquez sur « Ajouter une catégorie » ci-dessous."
-      : "Menu en préparation. Revenez bientôt !";
+    p.textContent = "Menu en préparation. Revenez bientôt !";
     grid.appendChild(p);
   }
 
@@ -879,16 +1048,19 @@ function renderMenu(){
 
     if(isAdmin){
       let pressTimer = null;
-
       const startPress = ev=>{
         if(ev.button !== undefined && ev.button !== 0) return;
         clearTimeout(pressTimer);
         pressTimer = setTimeout(()=>{
           btn.dataset.longpressed = '1';
           if(navigator.vibrate) navigator.vibrate(30);
-          if(confirm('Supprimer la catégorie « ' + cat.name + ' » et tous ses éléments ?')){
-            deleteCategory(cat.id);
-          }
+          showConfirm({
+            icon: '🗑️',
+            title: 'Supprimer la catégorie ?',
+            message: '« ' + cat.name + ' » et tous ses éléments seront définitivement supprimés.',
+            confirmLabel: 'Supprimer',
+            onYes: ()=> deleteCategory(cat.id)
+          });
         }, 700);
       };
       const cancelPress = ()=>{ clearTimeout(pressTimer); };
@@ -905,11 +1077,38 @@ function renderMenu(){
     grid.appendChild(wrap);
   });
 
-  document.getElementById('addCategoryBtn').hidden = !isAdmin;
-  document.getElementById('adminBanner').hidden = !isAdmin;
+  if(isAdmin){
+    const addCard = document.createElement('button');
+    addCard.type = 'button';
+    addCard.className = 'add-cat-card';
+    addCard.setAttribute('aria-label', 'Ajouter une catégorie');
+
+    const inner = document.createElement('div');
+    inner.className = 'inner';
+
+    const plus = document.createElement('div');
+    plus.className = 'plus';
+    plus.textContent = '+';
+
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = 'AJOUTER';
+
+    inner.append(plus, label);
+    addCard.appendChild(inner);
+    addCard.addEventListener('click', ()=> openCategoryEdit(null));
+    grid.appendChild(addCard);
+  }
 }
 
-/* ============ MODAL PLAT (CLIENT) ============ */
+/* ============ UI ADMIN ============ */
+function applyAdminUI(){
+  document.getElementById('adminFloat').hidden = !isAdmin;
+  document.body.classList.toggle('admin-active', isAdmin);
+  renderMenu();
+}
+
+/* ============ MODAL PLAT ============ */
 const modal = document.getElementById('dishModal');
 const modalImg = document.getElementById('modalImage');
 const modalTitle = document.getElementById('modalTitle');
@@ -920,6 +1119,7 @@ const quantity = document.getElementById('quantity');
 const cartModal = document.getElementById('cartModal');
 const passwordModal = document.getElementById('passwordModal');
 const categoryModal = document.getElementById('categoryModal');
+const editModal = document.getElementById('editModal');
 let currentCatId = '';
 
 function openDish(catId){
@@ -944,9 +1144,7 @@ function openDish(catId){
 
   quantity.value = '1';
   updatePrice();
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
+  openGuarded(modal);
 }
 
 function updatePrice(){
@@ -982,9 +1180,7 @@ function isDeliverySelected(){
 }
 function openCart(){
   renderCart();
-  cartModal.classList.add('open');
-  cartModal.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
+  openGuarded(cartModal);
 }
 function closeCart(){
   cartModal.classList.remove('open');
@@ -992,7 +1188,7 @@ function closeCart(){
   refreshBodyLock();
 }
 function refreshBodyLock(){
-  const anyOpen = [modal, cartModal, passwordModal, categoryModal]
+  const anyOpen = [modal, cartModal, passwordModal, categoryModal, editModal, confirmModal]
     .some(m=>m.classList.contains('open'));
   document.body.classList.toggle('modal-open', anyOpen);
 }
@@ -1046,7 +1242,10 @@ function renderCart(){
 
 document.getElementById('openCart').addEventListener('click', openCart);
 document.getElementById('closeCart').addEventListener('click', closeCart);
-cartModal.addEventListener('click', e=>{ if(e.target.dataset.cartClose==='true') closeCart(); });
+cartModal.addEventListener('click', e=>{
+  if(guardedClose(cartModal, e)) return;
+  if(e.target.dataset.cartClose==='true') closeCart();
+});
 document.getElementById('deliveryCheckbox').addEventListener('change', renderCart);
 
 document.getElementById('orderButton').addEventListener('click', ()=>{
@@ -1099,7 +1298,7 @@ document.getElementById('checkoutWhatsApp').addEventListener('click', ()=>{
   const delivery = dsel ? DELIVERY_FEE : 0;
   const total = subtotal + delivery;
 
-  let mn = '🛒 NOUVELLE COMMANDE ILYM PIZZA\n\n';
+  let mn = '🛒 NOUVELLE COMMANDE\n\n';
   cart.forEach((it,i)=>{ mn += (i+1)+'. '+it.name+' — '+it.option+' x'+it.qty+' = '+fmt(it.price*it.qty)+' DA\n'; });
   mn += '\nSous-total : ' + fmt(subtotal) + ' DA';
   if(dsel) mn += '\nLivraison : ' + delivery + ' DA';
@@ -1108,9 +1307,9 @@ document.getElementById('checkoutWhatsApp').addEventListener('click', ()=>{
   mn += '\n👤 ' + name;
   mn += '\n📞 ' + phone;
   if(dsel && address) mn += '\n🏠 ' + address;
-  envoyerNotificationNtfy('Nouvelle commande ILYM PIZZA', mn, 'urgent');
+  envoyerNotificationNtfy(settings.logoLeft + ' ' + settings.logoRight + ' — Nouvelle commande', mn, 'urgent');
 
-  let message = 'Bonjour ILYM PIZZA ! Je souhaite confirmer cette commande :\n';
+  let message = 'Bonjour ! Je souhaite confirmer cette commande :\n';
   cart.forEach((it,i)=>{
     message += '\n'+(i+1)+'. '+it.name+' — '+it.option+' x'+it.qty+' = '+fmt(it.price*it.qty)+' DA';
   });
@@ -1122,7 +1321,7 @@ document.getElementById('checkoutWhatsApp').addEventListener('click', ()=>{
   message += '\n📞 Téléphone : ' + phone;
   if(dsel && address) message += '\n🏠 Adresse : ' + address;
   message += '\n\nMerci de confirmer la disponibilité et le total.';
-  window.open('https://wa.me/213674817474?text='+encodeURIComponent(message), '_blank');
+  window.open('https://wa.me/' + settings.phone + '?text=' + encodeURIComponent(message), '_blank');
 });
 
 ['customerName','customerPhone','customerAddress'].forEach(id=>{
@@ -1131,28 +1330,30 @@ document.getElementById('checkoutWhatsApp').addEventListener('click', ()=>{
   });
 });
 
-/* ============ ACCÈS ADMIN ============ */
+/* ============ ACCÈS ADMIN (appui long 3s sur logo) ============ */
 const secretTrigger = document.getElementById('secretAdminTrigger');
-let pressTimer = null;
-function cancelLongPress(){ if(pressTimer!==null){ clearTimeout(pressTimer); pressTimer=null; } }
-function startLongPress(e){
-  if(e.type==='contextmenu') e.preventDefault();
-  cancelLongPress();
-  pressTimer = setTimeout(()=>{ pressTimer=null; openPasswordModal(); }, 3000);
-}
-secretTrigger.addEventListener('pointerdown', startLongPress);
-secretTrigger.addEventListener('pointerup', cancelLongPress);
-secretTrigger.addEventListener('pointerleave', cancelLongPress);
-secretTrigger.addEventListener('pointercancel', cancelLongPress);
+let adminTimer = null;
+
+secretTrigger.addEventListener('pointerdown', e=>{
+  if(e.button !== undefined && e.button !== 0) return;
+  if(isAdmin) return;
+  if(adminTimer){ clearTimeout(adminTimer); }
+  adminTimer = setTimeout(()=>{
+    adminTimer = null;
+    openPasswordModal();
+  }, 3000);
+});
+const cancelAdminPress = ()=>{ if(adminTimer){ clearTimeout(adminTimer); adminTimer = null; } };
+secretTrigger.addEventListener('pointerup', cancelAdminPress);
+secretTrigger.addEventListener('pointerleave', cancelAdminPress);
+secretTrigger.addEventListener('pointercancel', cancelAdminPress);
 secretTrigger.addEventListener('contextmenu', e=>e.preventDefault());
 
 function openPasswordModal(){
   document.getElementById('adminPassword').value = '';
   document.getElementById('passwordError').textContent = '';
-  passwordModal.classList.add('open');
-  passwordModal.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
-  setTimeout(()=>document.getElementById('adminPassword').focus(), 100);
+  openGuarded(passwordModal);
+  setTimeout(()=>document.getElementById('adminPassword').focus(), 150);
 }
 function closePasswordModal(){
   passwordModal.classList.remove('open');
@@ -1160,7 +1361,10 @@ function closePasswordModal(){
   refreshBodyLock();
 }
 document.getElementById('closePassword').addEventListener('click', closePasswordModal);
-passwordModal.addEventListener('click', e=>{ if(e.target.dataset.passwordClose==='true') closePasswordModal(); });
+passwordModal.addEventListener('click', e=>{
+  if(guardedClose(passwordModal, e)) return;
+  if(e.target.dataset.passwordClose==='true') closePasswordModal();
+});
 document.getElementById('adminPassword').addEventListener('input', e=>{
   e.target.value = e.target.value.replace(/\D/g,'');
   document.getElementById('passwordError').textContent = '';
@@ -1171,7 +1375,7 @@ document.getElementById('passwordForm').addEventListener('submit', e=>{
   if(entered === ADMIN_CODE){
     isAdmin = true;
     closePasswordModal();
-    renderMenu();
+    applyAdminUI();
     showToast('Mode administrateur activé 🔓');
   }else{
     document.getElementById('passwordError').textContent = 'Code incorrect. Réessayez.';
@@ -1181,9 +1385,19 @@ document.getElementById('passwordForm').addEventListener('submit', e=>{
 });
 
 document.getElementById('logoutAdmin').addEventListener('click', ()=>{
-  isAdmin = false;
-  renderMenu();
-  showToast('Mode administrateur désactivé 🔒');
+  showConfirm({
+    icon: '🔒',
+    title: 'Quitter le mode admin ?',
+    message: 'Les boutons d\'édition et le bouton "Copier HTML" disparaîtront.',
+    confirmLabel: 'Quitter',
+    onYes: ()=>{
+      isAdmin = false;
+      closeEditModal();
+      closeCategoryModal();
+      applyAdminUI();
+      showToast('Mode administrateur désactivé 🔒');
+    }
+  });
 });
 
 /* ============ ÉDITION CATÉGORIE ============ */
@@ -1206,10 +1420,7 @@ function openCategoryEdit(catId){
   document.getElementById('newOptPrice').value = '';
 
   renderWorkingOptions();
-
-  categoryModal.classList.add('open');
-  categoryModal.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
+  openGuarded(categoryModal);
 }
 function closeCategoryModal(){
   categoryModal.classList.remove('open');
@@ -1218,9 +1429,11 @@ function closeCategoryModal(){
 }
 document.getElementById('closeCategory').addEventListener('click', closeCategoryModal);
 document.getElementById('cancelCategoryBtn').addEventListener('click', closeCategoryModal);
-categoryModal.addEventListener('click', e=>{ if(e.target.dataset.catClose==='true') closeCategoryModal(); });
+categoryModal.addEventListener('click', e=>{
+  if(guardedClose(categoryModal, e)) return;
+  if(e.target.dataset.catClose==='true') closeCategoryModal();
+});
 
-/* --- Upload image via imgbb --- */
 document.getElementById('catImageFile').addEventListener('change', async e=>{
   const file = e.target.files && e.target.files[0];
   if(!file) return;
@@ -1276,8 +1489,13 @@ function renderWorkingOptions(){
     const delBtn = document.createElement('button');
     delBtn.type = 'button'; delBtn.textContent = '🗑️'; delBtn.title = 'Supprimer';
     delBtn.addEventListener('click', ()=>{
-      workingOptions.splice(i,1);
-      renderWorkingOptions();
+      showConfirm({
+        icon: '🗑️',
+        title: 'Supprimer cet élément ?',
+        message: '« ' + opt.label + ' » sera retiré de la catégorie.',
+        confirmLabel: 'Supprimer',
+        onYes: ()=>{ workingOptions.splice(i,1); renderWorkingOptions(); }
+      });
     });
 
     actions.append(editBtn, delBtn);
@@ -1342,17 +1560,222 @@ function deleteCategory(catId){
   showToast('Catégorie supprimée 🗑️');
 }
 
-document.getElementById('addCategoryBtn').addEventListener('click', ()=>{
-  openCategoryEdit(null);
+/* ============ ÉDITION TEXTE GÉNÉRIQUE ============ */
+let editConfig = null;
+
+function openEditModal(config){
+  editConfig = config;
+  document.getElementById('editEmoji').textContent = config.emoji || '✏️';
+  document.getElementById('editTitle').textContent = config.title;
+  document.getElementById('editSub').textContent = config.sub || 'Modifier le contenu';
+  document.getElementById('editLabel').textContent = config.label;
+  document.getElementById('editField').value = config.value || '';
+  document.getElementById('editField').rows = config.multiline ? 3 : 1;
+
+  const hint = document.getElementById('editHint');
+  if(config.hint){
+    hint.textContent = config.hint;
+    hint.style.display = 'block';
+  }else{
+    hint.style.display = 'none';
+  }
+
+  const curWrap = document.getElementById('editCurrentWrap');
+  if(config.value){
+    document.getElementById('editCurrent').textContent = config.value;
+    curWrap.style.display = 'block';
+  }else{
+    curWrap.style.display = 'none';
+  }
+
+  openGuarded(editModal);
+  /* Focus différé pour éviter le zoom auto iOS et l'ouverture clavier brutale */
+  setTimeout(()=>{
+    const f = document.getElementById('editField');
+    f.focus();
+    try{ f.setSelectionRange(f.value.length, f.value.length); }catch(e){}
+  }, 250);
+}
+function closeEditModal(){
+  editModal.classList.remove('open');
+  editModal.setAttribute('aria-hidden','true');
+  refreshBodyLock();
+  editConfig = null;
+}
+document.getElementById('closeEdit').addEventListener('click', closeEditModal);
+document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
+editModal.addEventListener('click', e=>{
+  if(guardedClose(editModal, e)) return;
+  if(e.target.dataset.editClose === 'true') closeEditModal();
 });
 
-/* ============ COPIER HTML (avec données actuelles) ============ */
+/* Enregistrement */
+document.getElementById('saveEditBtn').addEventListener('click', ()=>{
+  if(!editConfig) return;
+  const val = document.getElementById('editField').value;
+  try{
+    if(editConfig.onSave) editConfig.onSave(val);
+    saveSettings();
+    applySettings();
+    closeEditModal();
+    showToast('✅ Enregistré');
+  }catch(err){
+    console.error(err);
+    showToast('❌ Erreur lors de l\'enregistrement');
+  }
+});
+
+/* ============ DÉFINITION DES CHAMPS ÉDITABLES ============ */
+const EDIT_DEFS = {
+  logoLeft: {
+    emoji: '🔤',
+    title: 'Logo — partie gauche',
+    sub: 'Texte principal du logo',
+    label: 'Contenu',
+    get: ()=> settings.logoLeft,
+    set: v => { settings.logoLeft = v.trim() || 'ILYM'; }
+  },
+  logoRight: {
+    emoji: '🟡',
+    title: 'Logo — partie droite',
+    sub: 'Texte doré en italique',
+    label: 'Contenu',
+    get: ()=> settings.logoRight,
+    set: v => { settings.logoRight = v.trim() || 'PIZZA'; }
+  },
+  tagline: {
+    emoji: '✨',
+    title: 'Signature du haut',
+    sub: 'Sous-titre sous le logo',
+    label: 'Contenu',
+    hint: 'Ex : FRESH FOOD · GOOD MOOD',
+    get: ()=> settings.tagline,
+    set: v => { settings.tagline = v.trim(); }
+  },
+  findTitle: {
+    emoji: '📍',
+    title: 'Titre "Nous trouver"',
+    sub: 'En-tête de la carte localisation',
+    label: 'Contenu',
+    get: ()=> settings.findTitle,
+    set: v => { settings.findTitle = v.trim(); }
+  },
+  findName: {
+    emoji: '🏪',
+    title: 'Nom du restaurant',
+    sub: 'Dans la carte localisation',
+    label: 'Contenu',
+    hint: 'Affiché en gras sous "Nous trouver"',
+    get: ()=> settings.findName,
+    set: v => { settings.findName = v.trim(); }
+  },
+  findAddress: {
+    emoji: '🗺️',
+    title: 'Adresse affichée',
+    sub: 'Dans la carte localisation',
+    label: 'Adresse (une ligne par retour)',
+    multiline: true,
+    hint: 'Utilisez Entrée pour un saut de ligne.',
+    get: ()=> settings.findAddress,
+    set: v => { settings.findAddress = v; }
+  },
+  footer: {
+    emoji: '❤️',
+    title: 'Signature du bas',
+    sub: 'Pied de page',
+    label: 'Contenu',
+    hint: 'Ex : ILYM PIZZA · BON APPÉTIT',
+    get: ()=> settings.footer,
+    set: v => { settings.footer = v.trim(); }
+  },
+  phone: {
+    emoji: '📞',
+    title: 'Numéro de téléphone',
+    sub: 'WhatsApp & bouton Appeler',
+    label: 'Numéro (indicatif pays sans +)',
+    hint: 'Ex : 213674817474',
+    get: ()=> settings.phone,
+    set: v => { settings.phone = v.replace(/[^\d]/g,''); }
+  },
+  mapsDest: {
+    emoji: '🧭',
+    title: 'Destination GPS',
+    sub: 'Bouton Itinéraire Google Maps',
+    label: 'Adresse / coordonnées',
+    hint: 'Ex : CF7G+M24, Dahmouni, Algeria',
+    get: ()=> settings.mapsDest,
+    set: v => { settings.mapsDest = v.trim(); }
+  }
+};
+
+function triggerEdit(key){
+  const def = EDIT_DEFS[key];
+  if(!def){ showToast('Élément inconnu'); return; }
+  openEditModal({
+    emoji: def.emoji,
+    title: def.title,
+    sub: def.sub,
+    label: def.label,
+    value: def.get(),
+    multiline: !!def.multiline,
+    hint: def.hint,
+    onSave: def.set
+  });
+}
+
+/* Attache long-press sur tous les [data-edit] */
+document.querySelectorAll('[data-edit]').forEach(el=>{
+  let t = null;
+  let justLongPressed = false;
+
+  const cancel = ()=>{
+    if(t){ clearTimeout(t); t = null; }
+  };
+
+  el.addEventListener('pointerdown', e=>{
+    if(e.button !== undefined && e.button !== 0) return;
+    if(!isAdmin) return;
+    cancel();
+    justLongPressed = false;
+    t = setTimeout(()=>{
+      t = null;
+      justLongPressed = true;
+      if(navigator.vibrate) navigator.vibrate(25);
+      triggerEdit(el.dataset.edit);
+    }, 700);
+  });
+
+  el.addEventListener('pointerup', e=>{
+    cancel();
+    /* Si l'appui long vient de déclencher, bloquer le click/lien suivant */
+    if(justLongPressed){
+      e.preventDefault();
+      e.stopPropagation();
+      justLongPressed = false;
+    }
+  });
+
+  el.addEventListener('pointerleave', cancel);
+  el.addEventListener('pointercancel', cancel);
+
+  /* Bloque le click natif après un appui long (liens, contexte) */
+  el.addEventListener('click', e=>{
+    if(justLongPressed){
+      e.preventDefault();
+      e.stopPropagation();
+      justLongPressed = false;
+    }
+  }, true);
+
+  el.addEventListener('contextmenu', e=>e.preventDefault());
+});
+
+/* ============ COPIER HTML ============ */
 async function copyAppHTML(){
-  closeModal(); closeCart(); closePasswordModal(); closeCategoryModal();
+  closeModal(); closeCart(); closePasswordModal(); closeCategoryModal(); closeEditModal(); closeConfirm();
 
   document.getElementById('mainMenu').replaceChildren();
-  document.getElementById('adminBanner').hidden = true;
-  document.getElementById('addCategoryBtn').hidden = true;
+  document.getElementById('adminFloat').hidden = true;
 
   cart.length = 0;
   renderCart();
@@ -1364,21 +1787,21 @@ async function copyAppHTML(){
 
   let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-  const startMarker = '/*__DEFAULT_MENU_START__*/';
-  const endMarker = '/*__DEFAULT_MENU_END__*/';
-  const s = html.indexOf(startMarker);
-  const e = html.indexOf(endMarker);
+  const ms = '/*__DEFAULT_MENU_START__*/';
+  const me = '/*__DEFAULT_MENU_END__*/';
+  const s1 = html.indexOf(ms);
+  const e1 = html.indexOf(me);
+  if(s1 === -1 || e1 === -1){ showToast('❌ Marqueurs menu introuvables'); applyAdminUI(); return; }
+  const newMenu = '\nconst DEFAULT_MENU = ' + JSON.stringify(menuData, null, 1) + ';\n';
+  html = html.slice(0, s1 + ms.length) + newMenu + html.slice(e1);
 
-  if(s === -1 || e === -1){
-    showToast('❌ Marqueurs introuvables');
-    renderMenu();
-    return;
-  }
-
-  const before = html.slice(0, s + startMarker.length);
-  const after = html.slice(e);
-  const newData = '\nconst DEFAULT_MENU = ' + JSON.stringify(menuData, null, 1) + ';\n';
-  html = before + newData + after;
+  const ss = '/*__DEFAULT_SETTINGS_START__*/';
+  const se = '/*__DEFAULT_SETTINGS_END__*/';
+  const s2 = html.indexOf(ss);
+  const e2 = html.indexOf(se);
+  if(s2 === -1 || e2 === -1){ showToast('❌ Marqueurs settings introuvables'); applyAdminUI(); return; }
+  const newSettings = '\nconst DEFAULT_SETTINGS = ' + JSON.stringify(settings, null, 1) + ';\n';
+  html = html.slice(0, s2 + ss.length) + newSettings + html.slice(e2);
 
   try{
     if(navigator.clipboard && window.isSecureContext){
@@ -1398,7 +1821,7 @@ async function copyAppHTML(){
     showToast('❌ Copie impossible');
   }
 
-  renderMenu();
+  applyAdminUI();
   renderCart();
 }
 
@@ -1407,7 +1830,7 @@ document.getElementById('copyHtmlBtn').addEventListener('click', copyAppHTML);
 /* ============ CLAVIER ============ */
 document.addEventListener('keydown', e=>{
   if(e.key === 'Escape'){
-    closeModal(); closeCart(); closePasswordModal(); closeCategoryModal();
+    closeModal(); closeCart(); closePasswordModal(); closeCategoryModal(); closeEditModal(); closeConfirm();
   }
 });
 
@@ -1420,7 +1843,8 @@ if('serviceWorker' in navigator){
 }
 
 /* ============ INITIALISATION ============ */
-renderMenu();
+applySettings();
+applyAdminUI();
 renderCart();
 </script>
 </body></html>
