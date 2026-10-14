@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="fr"><head><script>(function sandboxHook() { var STUBS = ['switchTab','toggleFullscreen','runSandbox','openInfo','closeInfo', 'openPresets','closePresets','openSnippets','closeSnippets','openHistory','closeHistory', 'clearEditor','clearConsole','copyConsole','toggleConsole','setConsoleFilter', 'scrollConsoleToBottom','pasteInto','selectDevice','toggleDeviceMenu','reloadPreview', 'exportCode','importCode','shareCode','toggleSingleFile','switchSubTab','toggleAutoFs', 'clearRaw','extractBlock','copyExtraction','sendExtractionToLab','togglePreset', 'loadSnippet','restoreHistory','dismissInstall','installPwa','applyDevice', 'handleCodeInput','updateRawMeta','updateResultMeta','updateEditorMeta', 'openSheet','closeSheet','hideEditor','showEditor','saveCurrentAsSession', 'loadSession','deleteSession','renderSessions']; for (var si = 0; si < STUBS.length; si++) { if (typeof window[STUBS[si]] !== 'function') window[STUBS[si]] = function(){}; } var send = function(type, data) { try { window.parent.postMessage({ source: 'labcode', type: type, data: data }, '*'); } catch (e) {} }; var fmt = function(v) { if (typeof v === 'string') return v; if (v instanceof Error) return v.stack || (v.name + ': ' + v.message); try { return JSON.stringify(v, function(k, x) { return typeof x === 'function' ? '[Function]' : x; }); } catch (e) { return String(v); } }; var levels = { log: 'info', info: 'info', debug: 'info', warn: 'warn', error: 'error' }; Object.keys(levels).forEach(function(level) { var original = console[level]; console[level] = function() { var args = Array.prototype.slice.call(arguments); send(levels[level], args.map(fmt).join(' ')); try { original.apply(console, args); } catch (e) {} }; }); window.addEventListener('error', function(e) { var t = e.target; if (t && t !== window && (t.src || t.href)) send('warn', 'Ressource introuvable : ' + (t.src || t.href)); else send('error', (e.message || 'Erreur inconnue') + ' (Ligne ' + e.lineno + ')'); }, true); window.addEventListener('unhandledrejection', function(e) { send('error', 'Promesse rejetée : ' + fmt(e.reason)); }); })();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050914">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ILYM PIZZA — Menu</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.png">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;width:100%;background:#050914}
+body{
+ min-height:100vh;min-height:100dvh;padding:24px 14px 100px;
+ font-family:Arial,Helvetica,sans-serif;color:#f6f8fc;
+ background:radial-gradient(ellipse at 50% -15%,#193357 0%,#0a1323 42%,#03060c 82%);
+ overflow-x:hidden
+}
+header{text-align:center;margin:10px auto 28px}
+.logo{
+ font-weight:950;letter-spacing:4px;font-size:clamp(30px,8vw,48px);
+ text-shadow:0 4px 24px #0008;user-select:none;-webkit-user-select:none;
+ touch-action:manipulation;cursor:pointer
+}
+.logo b{color:#ffc928;font-style:italic}
+header p{margin-top:8px;color:#98a8c1;font-size:11px;letter-spacing:3px}
+.rule{width:86px;height:3px;border-radius:9px;background:#ffc928;margin:16px auto 0;box-shadow:0 0 18px #ffc92866}
+
+.admin-banner{
+ width:100%;max-width:760px;margin:0 auto 18px;padding:12px 16px;
+ display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+ border:1px solid #ffc928;border-radius:14px;
+ background:linear-gradient(145deg,#2a2010,#1a1408);
+ color:#ffc928;font-weight:800;font-size:13px;letter-spacing:1px
+}
+.admin-banner .label{flex:1;min-width:140px}
+.admin-banner .actions{display:flex;gap:8px;flex-wrap:wrap}
+.admin-banner button{
+ border:1px solid #ffc928;background:#101522;color:#ffc928;
+ padding:8px 12px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;
+ white-space:nowrap
+}
+.admin-banner button.copy{background:#ffc928;color:#101522}
+
+.menu{
+ width:100%;max-width:760px;margin:auto;display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
+}
+.dish-wrap{position:relative;transition:transform .22s}
+.dish-wrap:hover{transform:translateY(-3px)}
+.dish-wrap:hover .dish{
+ border-color:#ffc928;box-shadow:0 0 0 1px #ffc92844,0 15px 35px #0008
+}
+.dish-wrap:active{transform:scale(.97)}
+.dish{
+ appearance:none;display:block;width:100%;min-width:0;overflow:hidden;text-align:left;
+ border:1px solid #253751;border-radius:17px;
+ background:linear-gradient(145deg,#14243a,#0a1120);color:white;cursor:pointer;
+ box-shadow:0 12px 28px #0005;
+ transition:border-color .22s,box-shadow .22s;
+ padding:0;-webkit-tap-highlight-color:transparent
+}
+.dish img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#111827;pointer-events:none}
+.dish .dish-name{
+ display:block;text-align:center;padding:14px 6px;color:#ffc928;
+ font-weight:800;letter-spacing:1.2px;font-size:clamp(12px,3vw,15px);pointer-events:none
+}
+.add-category-btn{
+ display:block;width:100%;max-width:760px;margin:16px auto 0;
+ padding:18px;border:2px dashed #ffc92866;border-radius:17px;
+ background:transparent;color:#ffc928;font-weight:900;
+ font-size:14px;letter-spacing:1.5px;cursor:pointer;
+ transition:background .2s,border-color .2s
+}
+.add-category-btn:hover{background:#ffc92811;border-color:#ffc928}
+.empty-menu{
+ grid-column:1/-1;text-align:center;color:#7a8aa3;
+ font-size:13px;padding:40px 20px;letter-spacing:1px;line-height:1.8
+}
+
+.cart-bar{
+ position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));
+ z-index:40;margin:0;display:flex;justify-content:center;width:auto;max-width:calc(100% - 32px)
+}
+.cart-bar button{
+ border:1px solid #ffc928;background:#ffc928;color:#101522;font-weight:900;
+ padding:13px 18px;border-radius:50px;font-size:14px;cursor:pointer;box-shadow:0 6px 25px #0009
+}
+.cart-bar span{
+ display:inline-flex;align-items:center;justify-content:center;background:#101522;color:#ffc928;
+ border-radius:99px;min-width:24px;height:24px;margin-left:7px;padding:0 6px
+}
+.location-card{
+ width:100%;max-width:760px;margin:24px auto 0;padding:18px;border:1px solid #253751;
+ border-radius:18px;background:linear-gradient(145deg,#14243a,#0a1120);
+ text-align:center;box-shadow:0 12px 28px #0005
+}
+.location-card h2{font-size:18px;color:#ffc928;margin-bottom:8px;letter-spacing:1px}
+.location-card p{font-size:13px;line-height:1.6;color:#aab8ce;margin-bottom:14px}
+.location-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.location-link{
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;
+ padding:12px 14px;border-radius:12px;text-decoration:none;font-size:13px;font-weight:800;
+ background:#ffc928;color:#101522;border:1px solid #ffc928;text-align:center
+}
+.location-link.primary-full{grid-column:1 / -1}
+.location-link.secondary{background:#101a2b;color:#f6f8fc;border-color:#344762}
+footer{text-align:center;color:#71829d;font-size:10px;letter-spacing:2px;margin:28px auto 0}
+#toast{
+ position:fixed;left:50%;bottom:90px;transform:translate(-50%,18px);opacity:0;
+ pointer-events:none;background:#ffc928;color:#101522;padding:12px 20px;border-radius:12px;
+ font-weight:800;box-shadow:0 8px 30px #0008;transition:.2s;max-width:90vw;
+ text-align:center;z-index:200
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:#000c;backdrop-filter:blur(9px)}
+.modal-card{
+ position:relative;z-index:1;width:min(100%,460px);max-height:92dvh;overflow:auto;
+ border:1px solid #334764;border-radius:22px;background:linear-gradient(155deg,#14243a,#070c16);
+ box-shadow:0 25px 90px #000b;animation:pop .2s ease
+}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.close{
+ position:absolute;right:12px;top:12px;z-index:2;width:40px;height:40px;
+ border:1px solid #ffffff44;border-radius:50%;background:#050914cc;color:#fff;font-size:28px;cursor:pointer
+}
+.modal-image{display:block;width:100%;height:220px;object-fit:cover;background:#101827}
+.modal-content{padding:20px}
+.eyebrow{font-size:10px;letter-spacing:2px;color:#ffc928;font-weight:800}
+.modal-content h2{font-size:25px;margin:7px 0;color:#ffc928}
+.description{color:#aab8ce;font-size:13px;margin-bottom:18px}
+.modal-content label{display:block;font-size:12px;color:#c5d0e1;margin:14px 0 7px}
+.modal-content label .required-star{color:#ff6b6b;margin-left:4px;font-weight:900}
+.modal-content select,.quantity-row input,.customer-input,.admin-input{
+ width:100%;border:1px solid #344862;background:#08111f;color:#fff;
+ border-radius:10px;padding:12px;font-size:15px;outline:none
+}
+.modal-content select:focus,.customer-input:focus,.admin-input:focus{border-color:#ffc928}
+.customer-input.invalid{border-color:#ff6b6b;box-shadow:0 0 0 2px #ff6b6b33}
+.price-row{
+ display:flex;justify-content:space-between;align-items:center;gap:10px;
+ padding:15px 0;margin-top:8px;border-bottom:1px solid #263750;color:#aab8ce
+}
+.price-row strong{color:#ffc928;font-size:21px}
+.quantity-row{display:flex;gap:10px}
+.quantity-row button{
+ width:48px;flex-shrink:0;border:1px solid #344862;border-radius:10px;
+ background:#17263d;color:#ffc928;font-size:24px;cursor:pointer
+}
+.quantity-row input{text-align:center}
+.order-button{
+ width:100%;margin-top:18px;padding:15px;border:0;border-radius:12px;
+ background:#25d366;color:#062b14;font-size:15px;font-weight:900;cursor:pointer
+}
+.order-button:hover{filter:brightness(1.07)}
+.cart-items{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.cart-line{
+ display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px;
+ border:1px solid #2a3d58;border-radius:12px;background:#0a1322
+}
+.cart-line strong{color:#ffc928;font-size:14px}
+.cart-line small{display:block;color:#aab8ce;margin-top:4px}
+.cart-line-actions{display:flex;align-items:center;gap:7px;margin-top:8px;flex-wrap:wrap}
+.cart-line-actions button{
+ border:1px solid #344862;background:#17263d;color:#fff;border-radius:8px;padding:5px 9px;cursor:pointer
+}
+.cart-line-actions .remove{color:#ff9a9a}
+.empty-cart{color:#aab8ce;font-size:13px;padding:14px 0}
+.customer-input{font-size:14px}
+.cart-card .modal-content{padding-top:28px}
+.delivery-toggle{
+ display:flex;align-items:center;gap:12px;padding:14px;
+ margin-top:16px;border:1px solid #344862;border-radius:12px;
+ background:#0a1322;cursor:pointer;font-size:13px;color:#f6f8fc;
+ font-weight:700;line-height:1.4;transition:border-color .2s,background .2s;
+ user-select:none;-webkit-user-select:none
+}
+.delivery-toggle:has(input:checked){
+ border-color:#ffc928;background:#1a2437;box-shadow:0 0 0 1px #ffc92844
+}
+.delivery-toggle input{
+ width:22px;height:22px;accent-color:#ffc928;flex-shrink:0;cursor:pointer;margin:0
+}
+.delivery-toggle span{flex:1}
+.delivery-toggle b{color:#ffc928}
+.small-note{font-size:10px;line-height:1.5;color:#8191aa;margin-top:12px}
+body.modal-open{overflow:hidden}
+
+.admin-card{width:min(100%,500px)}
+.admin-card .modal-content{padding-top:30px}
+.admin-input{font-size:20px;letter-spacing:5px;text-align:center}
+.admin-error{color:#ff9696;font-size:12px;margin-top:10px;min-height:16px}
+.admin-button{
+ width:100%;padding:13px;margin-top:12px;border:1px solid #ffc928;border-radius:11px;
+ background:#ffc928;color:#101522;font-weight:900;font-size:14px;cursor:pointer
+}
+.admin-button.secondary{background:#101a2b;color:#fff;border-color:#344762}
+.admin-button.danger{background:#ff4d4d;color:#fff;border-color:#ff4d4d}
+
+.opt-row{
+ display:flex;justify-content:space-between;align-items:center;gap:10px;
+ padding:10px 12px;border:1px solid #2a3d58;border-radius:10px;
+ background:#0a1322;margin-bottom:8px
+}
+.opt-info strong{color:#ffc928;font-size:13px;display:block}
+.opt-info small{color:#aab8ce;font-size:12px}
+.opt-actions{display:flex;gap:6px}
+.opt-actions button{
+ width:32px;height:32px;border-radius:8px;border:1px solid #344862;
+ background:#17263d;color:#fff;cursor:pointer;font-size:13px;
+ padding:0;display:flex;align-items:center;justify-content:center
+}
+.opt-actions button:hover{border-color:#ffc928}
+
+.option-add-form{
+ margin-top:12px;padding:12px;
+ border:1px dashed #344862;border-radius:10px;background:#06101e
+}
+.option-add-form input{width:100%;margin-bottom:8px}
+.option-add-form .row{display:flex;gap:8px}
+.option-add-form .row input{flex:1;margin-bottom:0}
+.option-add-form .row button{
+ padding:0 16px;border-radius:10px;border:1px solid #ffc928;
+ background:#ffc928;color:#101522;font-weight:800;cursor:pointer;
+ white-space:nowrap;font-size:13px
+}
+
+.img-upload-row{display:flex;gap:8px;align-items:stretch}
+.img-upload-row input{flex:1}
+.img-upload-btn{
+ display:flex;align-items:center;justify-content:center;gap:6px;
+ padding:0 14px;border-radius:10px;border:1px solid #ffc928;
+ background:#17263d;color:#ffc928;font-weight:800;font-size:13px;
+ cursor:pointer;white-space:nowrap;min-height:46px
+}
+.img-upload-btn:hover{background:#1f3050}
+.upload-status{font-size:12px;margin-top:8px;min-height:16px;font-weight:700}
+
+@media(min-width:620px){.menu{grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}.dish .dish-name{padding:15px 5px}}
+@media(max-height:700px){.modal-image{height:150px}.modal-content{padding:15px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+</head>
+
+<body class="">
+<header>
+  <div class="logo" id="secretAdminTrigger" title="ILYM PIZZA">ILYM <b>PIZZA</b></div>
+  <p>FRESH FOOD · GOOD MOOD</p>
+  <div class="rule"></div>
+</header>
+
+<div class="admin-banner" id="adminBanner" hidden="">
+  <span class="label">🔓 Mode administrateur actif</span>
+  <div class="actions">
+    <button type="button" class="copy" id="copyHtmlBtn">📋 Copier HTML</button>
+    <button type="button" id="logoutAdmin">Quitter</button>
+  </div>
+</div>
+
+<div class="cart-bar">
+  <button id="openCart" type="button">🛒 Voir le panier <span id="cartCount">0</span></button>
+</div>
+
+<main class="menu" id="mainMenu"></main>
+<button class="add-category-btn" id="addCategoryBtn" type="button" hidden="">+ AJOUTER UNE CATÉGORIE</button>
+
+<section class="location-card" aria-label="Localisation du restaurant">
+  <h2>📍 NOUS TROUVER</h2>
+  <p>ILYM PIZZA<br>CF7G+M24, Dahmouni, Tiaret, Algérie</p>
+  <div class="location-actions">
+    <a class="location-link primary-full" href="https://www.google.com/maps/dir/?api=1&amp;destination=CF7G%2BM24%2C%20Dahmouni%2C%20Algeria" target="_blank" rel="noopener noreferrer">🧭 Itinéraire Google Maps</a>
+    <a class="location-link secondary" href="https://wa.me/213674817474" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+    <a class="location-link secondary" href="tel:+213674817474">📞 Appeler</a>
+  </div>
+</section>
+<footer>ILYM PIZZA · BON APPÉTIT</footer>
+<div id="toast" role="status" aria-live="polite" class=""></div>
+
+<!-- Modal Panier -->
+<div class="modal" id="cartModal" aria-hidden="true">
+  <div class="modal-backdrop" data-cart-close="true"></div>
+  <section class="modal-card cart-card" role="dialog" aria-modal="true">
+    <button class="close" type="button" aria-label="Fermer" id="closeCart">×</button>
+    <div class="modal-content">
+      <p class="eyebrow">ILYM PIZZA · COMMANDE</p>
+      <h2>Votre panier</h2>
+      <div id="cartItems" class="cart-items"><p class="empty-cart">Votre panier est vide.</p></div>
+
+      <label class="delivery-toggle" for="deliveryCheckbox">
+        <input type="checkbox" id="deliveryCheckbox">
+        <span>🚚 Je veux la livraison à domicile <b>(+100 DA)</b></span>
+      </label>
+
+      <div class="price-row"><span>Sous-total</span><strong id="cartSubtotal">0 DA</strong></div>
+      <div class="price-row" id="deliveryRow" style="display:none"><span>Frais de livraison</span><strong id="deliveryFee">0 DA</strong></div>
+      <div class="price-row"><span>Total à payer</span><strong id="cartTotal">0 DA</strong></div>
+
+      <label for="customerName">👤 Nom <span class="required-star">*</span></label>
+      <input id="customerName" class="customer-input" placeholder="Votre nom" maxlength="80" required="">
+
+      <label for="customerPhone">📞 Numéro de téléphone <span class="required-star">*</span></label>
+      <input id="customerPhone" class="customer-input" type="tel" inputmode="tel" placeholder="Ex : 0674 81 74 74" maxlength="20" autocomplete="tel" required="">
+
+      <label for="customerAddress">🏠 Adresse de livraison <span class="required-star" id="addressStar" style="display:none">*</span></label>
+      <input id="customerAddress" class="customer-input" placeholder="Adresse (si livraison)" maxlength="180">
+
+      <button class="order-button" id="checkoutWhatsApp" type="button">Confirmer la commande sur WhatsApp</button>
+      <p class="small-note">Les prix sont indicatifs. Le restaurant confirmera la disponibilité et le total.</p>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Plat (client) -->
+<div class="modal" id="dishModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="true"></div>
+  <section class="modal-card" role="dialog" aria-modal="true">
+    <button class="close" type="button" aria-label="Fermer" id="closeModal">×</button>
+    <img id="modalImage" class="modal-image" alt="">
+    <div class="modal-content">
+      <p class="eyebrow">ILYM PIZZA · MENU</p>
+      <h2 id="modalTitle">—</h2>
+      <p id="modalDescription" class="description">Choisissez votre option.</p>
+      <label for="variantSelect">Type / option</label>
+      <select id="variantSelect"></select>
+      <div class="price-row"><span>Prix estimé</span><strong id="modalPrice">— DA</strong></div>
+      <label for="quantity">Quantité</label>
+      <div class="quantity-row">
+        <button type="button" id="minusQty" aria-label="Diminuer">−</button>
+        <input id="quantity" type="number" min="1" max="20" value="1">
+        <button type="button" id="plusQty" aria-label="Augmenter">+</button>
+      </div>
+      <button class="order-button" id="orderButton" type="button">Ajouter au panier 🛒</button>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Mot de passe -->
+<div class="modal" id="passwordModal" aria-hidden="true">
+  <div class="modal-backdrop" data-password-close="true"></div>
+  <section class="modal-card admin-card" role="dialog" aria-modal="true">
+    <button class="close" type="button" id="closePassword" aria-label="Fermer">×</button>
+    <div class="modal-content">
+      <p class="eyebrow">ILYM PIZZA · ACCÈS ADMIN</p>
+      <h2>🔐 Code secret</h2>
+      <p class="description">Entrez votre code numérique pour continuer.</p>
+      <form id="passwordForm">
+        <label for="adminPassword">Code secret</label>
+        <input class="admin-input" id="adminPassword" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="20" autocomplete="current-password" placeholder="••••••••" required="">
+        <p id="passwordError" class="admin-error" aria-live="polite"></p>
+        <button class="admin-button" type="submit">Déverrouiller</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Édition Catégorie (admin) -->
+<div class="modal" id="categoryModal" aria-hidden="true">
+  <div class="modal-backdrop" data-cat-close="true"></div>
+  <section class="modal-card admin-card" role="dialog" aria-modal="true">
+    <button class="close" type="button" id="closeCategory" aria-label="Fermer">×</button>
+    <div class="modal-content">
+      <p class="eyebrow">ADMIN · CATÉGORIE</p>
+      <h2 id="categoryEditTitle">Ajouter une catégorie</h2>
+      <p class="description">Renseignez les informations et ses éléments.</p>
+
+      <label for="catName">Nom <span class="required-star">*</span></label>
+      <input id="catName" class="customer-input" placeholder="Ex : Pizza" maxlength="60">
+
+      <label for="catImage">Image <span class="required-star">*</span></label>
+      <div class="img-upload-row">
+        <input id="catImage" class="customer-input" placeholder="URL ou upload →" maxlength="500">
+        <label class="img-upload-btn" for="catImageFile">📁 Galerie</label>
+        <input id="catImageFile" type="file" accept="image/*" style="display:none">
+      </div>
+      <div id="imgUploadStatus" class="upload-status" style="color: rgb(37, 211, 102);">✅ Image uploadée avec succès</div>
+
+      <label for="catDesc">Description (facultatif)</label>
+      <input id="catDesc" class="customer-input" placeholder="Ex : Choisissez votre recette" maxlength="200">
+
+      <label>Éléments / options <span class="required-star">*</span></label>
+      <div id="catOptionsList"><div class="opt-row"><div class="opt-info"><strong>Bbxvxhx</strong><small>200 DA</small></div><div class="opt-actions"><button type="button" title="Modifier">✏️</button><button type="button" title="Supprimer">🗑️</button></div></div><div class="opt-row"><div class="opt-info"><strong>Bdjdkdj</strong><small>30 DA</small></div><div class="opt-actions"><button type="button" title="Modifier">✏️</button><button type="button" title="Supprimer">🗑️</button></div></div></div>
+
+      <div class="option-add-form">
+        <input id="newOptLabel" class="customer-input" placeholder="Nom de l'élément (ex : Poulet)" maxlength="80">
+        <div class="row">
+          <input id="newOptPrice" class="customer-input" type="number" inputmode="numeric" placeholder="Prix (DA)" min="0">
+          <button id="addOptionBtn" type="button">+ Ajouter</button>
+        </div>
+      </div>
+
+      <button class="admin-button" id="saveCategoryBtn" type="button">Enregistrer</button>
+      <button class="admin-button secondary" id="cancelCategoryBtn" type="button">Annuler</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============ CONFIG ============ */
+const ADMIN_CODE = '1747';
+const DELIVERY_FEE = 100;
+const NTFY_TOPIC = 'testo';
+const NTFY_URL = 'https://ntfy.sh/' + NTFY_TOPIC;
+const STORAGE_KEY = 'ilym_menu_data_v1';
+const IMGBB_API_KEY = '866d37daa3dd85b9b58e1a3a55524546';
+
+/* ============ DONNÉES PAR DÉFAUT ============ */
+/*__DEFAULT_MENU_START__*/
+const DEFAULT_MENU = [
+ {
+  "id": "cat_poutine",
+  "name": "Poutine",
+  "image": "https://i.ibb.co/nqZw4rNF/d1825eba0664093abdb14ade79d7d444.jpg",
+  "desc": "Poutine — choisissez votre recette.",
+  "options": [
+   {
+    "id": "opt_p1",
+    "label": "Poulet",
+    "price": 400
+   },
+   {
+    "id": "opt_p2",
+    "label": "Mixte",
+    "price": 500
+   },
+   {
+    "id": "opt_p3",
+    "label": "ILYM",
+    "price": 700
+   }
+  ]
+ },
+ {
+  "id": "cat_ma9loub",
+  "name": "Ma9loub",
+  "image": "https://i.ibb.co/C3QJ42Jq/images-2.jpg",
+  "desc": "Ma9loub — choisissez votre recette.",
+  "options": [
+   {
+    "id": "opt_m1",
+    "label": "Simple",
+    "price": 400
+   },
+   {
+    "id": "opt_m2",
+    "label": "Tunisia",
+    "price": 450
+   },
+   {
+    "id": "opt_m3",
+    "label": "Mixte",
+    "price": 500
+   }
+  ]
+ },
+ {
+  "id": "cat_plat",
+  "name": "Plat",
+  "image": "https://i.ibb.co/D0JFQ9M/Screenshot-20261012-230303-Chat-GPT.jpg",
+  "desc": "Plat accompagné de frites et salade.",
+  "options": [
+   {
+    "id": "opt_pl1",
+    "label": "Poulet",
+    "price": 500
+   },
+   {
+    "id": "opt_pl2",
+    "label": "Foie",
+    "price": 600
+   },
+   {
+    "id": "opt_pl3",
+    "label": "Merguez",
+    "price": 600
+   },
+   {
+    "id": "opt_pl4",
+    "label": "Forestière",
+    "price": 650
+   },
+   {
+    "id": "opt_pl5",
+    "label": "Mixte",
+    "price": 650
+   }
+  ]
+ },
+ {
+  "id": "cat_tacos",
+  "name": "Tacos",
+  "image": "https://i.ibb.co/Fk8vJ64z/Screenshot-20261012-230250-Chat-GPT.jpg",
+  "desc": "Tacos grillé — choisissez votre recette.",
+  "options": [
+   {
+    "id": "opt_t1",
+    "label": "Poulet",
+    "price": 400
+   },
+   {
+    "id": "opt_t2",
+    "label": "Viande hachée",
+    "price": 450
+   },
+   {
+    "id": "opt_t3",
+    "label": "Mixte",
+    "price": 500
+   }
+  ]
+ },
+ {
+  "id": "cat_burger",
+  "name": "Burger",
+  "image": "https://i.ibb.co/TqY7kPWB/Screenshot-20261012-230244-Chat-GPT.jpg",
+  "desc": "Burger — choisissez votre recette.",
+  "options": [
+   {
+    "id": "opt_b1",
+    "label": "Classic",
+    "price": 300
+   },
+   {
+    "id": "opt_b2",
+    "label": "Poulet",
+    "price": 250
+   },
+   {
+    "id": "opt_b3",
+    "label": "Mixte",
+    "price": 400
+   }
+  ]
+ },
+ {
+  "id": "cat_pizza",
+  "name": "Pizza",
+  "image": "https://i.ibb.co/J8BzM8Y/Screenshot-20261012-230238-Chat-GPT.jpg",
+  "desc": "Pizza maison — choisissez votre taille et votre recette.",
+  "options": [
+   {
+    "id": "opt_z1",
+    "label": "Marguerite M",
+    "price": 250
+   },
+   {
+    "id": "opt_z2",
+    "label": "Végétarienne M",
+    "price": 300
+   },
+   {
+    "id": "opt_z3",
+    "label": "Poulet M",
+    "price": 350
+   },
+   {
+    "id": "opt_z4",
+    "label": "Viande hachée M",
+    "price": 350
+   },
+   {
+    "id": "opt_z5",
+    "label": "Thon M",
+    "price": 350
+   },
+   {
+    "id": "opt_z6",
+    "label": "Merguez M",
+    "price": 350
+   },
+   {
+    "id": "opt_z7",
+    "label": "Mixte M",
+    "price": 400
+   },
+   {
+    "id": "opt_z8",
+    "label": "3 fromages M",
+    "price": 450
+   },
+   {
+    "id": "opt_z9",
+    "label": "4 fromages M",
+    "price": 500
+   },
+   {
+    "id": "opt_z10",
+    "label": "Fumée M",
+    "price": 500
+   },
+   {
+    "id": "opt_z11",
+    "label": "4 Saisons M",
+    "price": 600
+   },
+   {
+    "id": "opt_z12",
+    "label": "ILYM M",
+    "price": 700
+   },
+   {
+    "id": "opt_z13",
+    "label": "Poulet XL",
+    "price": 1000
+   },
+   {
+    "id": "opt_z14",
+    "label": "Viande hachée XL",
+    "price": 1000
+   },
+   {
+    "id": "opt_z15",
+    "label": "Thon XL",
+    "price": 1000
+   },
+   {
+    "id": "opt_z16",
+    "label": "Merguez XL",
+    "price": 1000
+   },
+   {
+    "id": "opt_z17",
+    "label": "Mixte XL",
+    "price": 1200
+   },
+   {
+    "id": "opt_z18",
+    "label": "3 fromages XL",
+    "price": 1300
+   },
+   {
+    "id": "opt_z19",
+    "label": "4 fromages XL",
+    "price": 1500
+   },
+   {
+    "id": "opt_z20",
+    "label": "Fumée XL",
+    "price": 1500
+   },
+   {
+    "id": "opt_z21",
+    "label": "4 Saisons XL",
+    "price": 1600
+   },
+   {
+    "id": "opt_z22",
+    "label": "ILYM XL",
+    "price": 1800
+   }
+  ]
+ },
+ {
+  "id": "cat_fajitas",
+  "name": "Fajitas",
+  "image": "https://i.ibb.co/mrVTDP9j/Easy-Chicken-Fajitas-Horiz.jpg",
+  "desc": "Fajitas — choisissez votre recette.",
+  "options": [
+   {
+    "id": "opt_f1",
+    "label": "Poulet",
+    "price": 350
+   },
+   {
+    "id": "opt_f2",
+    "label": "Mixte",
+    "price": 400
+   }
+  ]
+ },
+ {
+  "id": "cat_sandwich",
+  "name": "Sandwich",
+  "image": "https://i.ibb.co/nqMnsPSs/Pizza-Baciata-1.jpg",
+  "desc": "Sandwich grillé — choisissez votre recette.",
+  "options": [
+   {
+    "id": "opt_s1",
+    "label": "Spécial poulet haché",
+    "price": 250
+   },
+   {
+    "id": "opt_s2",
+    "label": "Spécial viande hachée",
+    "price": 300
+   },
+   {
+    "id": "opt_s3",
+    "label": "Mariné",
+    "price": 300
+   },
+   {
+    "id": "opt_s4",
+    "label": "Foie en sauce",
+    "price": 300
+   },
+   {
+    "id": "opt_s5",
+    "label": "Merguez en sauce",
+    "price": 350
+   },
+   {
+    "id": "opt_s6",
+    "label": "Mixte",
+    "price": 400
+   }
+  ]
+ },
+ {
+  "id": "cat_boissons",
+  "name": "Boissons",
+  "image": "https://i.ibb.co/xSVz2Zdg/f444108c3c165005c9e2fc3e76975e65.jpg",
+  "desc": "Choisissez votre boisson fraîche.",
+  "options": [
+   {
+    "id": "opt_bo1",
+    "label": "Jus",
+    "price": 70
+   },
+   {
+    "id": "opt_bo2",
+    "label": "Gaz",
+    "price": 70
+   },
+   {
+    "id": "opt_bo3",
+    "label": "L'eau",
+    "price": 30
+   },
+   {
+    "id": "opt_bo4",
+    "label": "Jus 1L",
+    "price": 150
+   },
+   {
+    "id": "opt_bo5",
+    "label": "Gaz 1L",
+    "price": 150
+   },
+   {
+    "id": "opt_bo6",
+    "label": "L'eau 1.5L",
+    "price": 50
+   }
+  ]
+ },
+ {
+  "id": "cat_mv8k8j3fj6hr3",
+  "name": "Ttt",
+  "image": "https://i.ibb.co/YF7LL8YJ/1000128366.jpg",
+  "desc": "Gfd",
+  "options": [
+   {
+    "id": "opt_mv8k87c05ba8w",
+    "label": "Bbxvxhx",
+    "price": 200
+   },
+   {
+    "id": "opt_mv8k8g3a6aapm",
+    "label": "Bdjdkdj",
+    "price": 30
+   }
+  ]
+ }
+];
+/*__DEFAULT_MENU_END__*/
+
+/* ============ OUTILS ============ */
+const toast = document.getElementById('toast');
+let toastTimer;
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toast.classList.remove('show'), 2400);
+}
+function uid(p){ return p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function fmt(n){ return Number(n).toLocaleString('fr-FR'); }
+
+/* ============ ÉTAT ============ */
+let isAdmin = false;              /* TOUJOURS false au chargement */
+let menuData = loadMenu();
+
+function loadMenu(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed)) return parsed;
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_MENU));
+}
+function saveMenu(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(menuData)); }
+  catch(e){ showToast('Sauvegarde impossible'); }
+}
+
+/* ============ NTFY ============ */
+function envoyerNotificationNtfy(titre, message, priorite){
+  fetch(NTFY_URL, {
+    method:'POST',
+    body: message,
+    headers:{ 'Title': titre, 'Priority': priorite || 'high', 'Tags':'pizza,moneybag' }
+  }).catch(err=>console.error('ntfy:', err));
+}
+
+/* ============ IMGBB UPLOAD ============ */
+async function uploadToImgbb(file){
+  if(!IMGBB_API_KEY || IMGBB_API_KEY === 'VOTRE_CLE_API_IMGBB'){
+    throw new Error('Clé API imgbb non configurée');
+  }
+  if(file.size > 10 * 1024 * 1024){
+    throw new Error('Image trop grande (max 10 MB)');
+  }
+  const formData = new FormData();
+  formData.append('image', file);
+  const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  if(!data || !data.success) throw new Error((data && data.error && data.error.message) || 'Échec upload');
+  return data.data.url;
+}
+
+/* ============ RENDU DU MENU ============ */
+function renderMenu(){
+  const grid = document.getElementById('mainMenu');
+  grid.replaceChildren();
+
+  const cats = isAdmin
+    ? menuData
+    : menuData.filter(c => c.options && c.options.length > 0);
+
+  if(!cats.length){
+    const p = document.createElement('p');
+    p.className = 'empty-menu';
+    p.textContent = isAdmin
+      ? "Aucune catégorie. Cliquez sur « Ajouter une catégorie » ci-dessous."
+      : "Menu en préparation. Revenez bientôt !";
+    grid.appendChild(p);
+  }
+
+  cats.forEach(cat=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'dish-wrap';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'dish';
+
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.src = cat.image;
+    img.alt = cat.name;
+
+    const name = document.createElement('span');
+    name.className = 'dish-name';
+    name.textContent = (cat.name || '—').toUpperCase();
+
+    btn.append(img, name);
+
+    btn.addEventListener('click', e=>{
+      if(btn.dataset.longpressed === '1'){
+        btn.dataset.longpressed = '0';
+        e.preventDefault(); e.stopPropagation();
+        return;
+      }
+      if(isAdmin) openCategoryEdit(cat.id);
+      else openDish(cat.id);
+    });
+
+    if(isAdmin){
+      let pressTimer = null;
+
+      const startPress = ev=>{
+        if(ev.button !== undefined && ev.button !== 0) return;
+        clearTimeout(pressTimer);
+        pressTimer = setTimeout(()=>{
+          btn.dataset.longpressed = '1';
+          if(navigator.vibrate) navigator.vibrate(30);
+          if(confirm('Supprimer la catégorie « ' + cat.name + ' » et tous ses éléments ?')){
+            deleteCategory(cat.id);
+          }
+        }, 700);
+      };
+      const cancelPress = ()=>{ clearTimeout(pressTimer); };
+      const preventContext = ev=>{ ev.preventDefault(); };
+
+      wrap.addEventListener('pointerdown', startPress);
+      wrap.addEventListener('pointerup', cancelPress);
+      wrap.addEventListener('pointerleave', cancelPress);
+      wrap.addEventListener('pointercancel', cancelPress);
+      wrap.addEventListener('contextmenu', preventContext);
+    }
+
+    wrap.appendChild(btn);
+    grid.appendChild(wrap);
+  });
+
+  document.getElementById('addCategoryBtn').hidden = !isAdmin;
+  document.getElementById('adminBanner').hidden = !isAdmin;
+}
+
+/* ============ MODAL PLAT (CLIENT) ============ */
+const modal = document.getElementById('dishModal');
+const modalImg = document.getElementById('modalImage');
+const modalTitle = document.getElementById('modalTitle');
+const modalDescription = document.getElementById('modalDescription');
+const variantSelect = document.getElementById('variantSelect');
+const modalPrice = document.getElementById('modalPrice');
+const quantity = document.getElementById('quantity');
+const cartModal = document.getElementById('cartModal');
+const passwordModal = document.getElementById('passwordModal');
+const categoryModal = document.getElementById('categoryModal');
+let currentCatId = '';
+
+function openDish(catId){
+  const cat = menuData.find(c=>c.id===catId);
+  if(!cat || !cat.options.length) return;
+
+  currentCatId = catId;
+  modalTitle.textContent = cat.name.toUpperCase();
+  modalDescription.textContent = cat.desc || 'Choisissez votre option.';
+  modalImg.src = cat.image;
+  modalImg.alt = cat.name;
+
+  variantSelect.replaceChildren();
+  cat.options.forEach(opt=>{
+    const o = document.createElement('option');
+    o.value = opt.id;
+    o.textContent = opt.label + ' — ' + fmt(opt.price) + ' DA';
+    o.dataset.price = String(opt.price);
+    o.dataset.label = opt.label;
+    variantSelect.appendChild(o);
+  });
+
+  quantity.value = '1';
+  updatePrice();
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+
+function updatePrice(){
+  const opt = variantSelect.options[variantSelect.selectedIndex];
+  const price = opt ? Number(opt.dataset.price) : 0;
+  const qty = Math.max(1, Math.min(20, Number(quantity.value)||1));
+  quantity.value = String(qty);
+  modalPrice.textContent = fmt(price*qty) + ' DA';
+}
+function closeModal(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  refreshBodyLock();
+}
+
+variantSelect.addEventListener('change', updatePrice);
+quantity.addEventListener('change', updatePrice);
+document.getElementById('minusQty').addEventListener('click',()=>{
+  quantity.value = String(Math.max(1,(Number(quantity.value)||1)-1)); updatePrice();
+});
+document.getElementById('plusQty').addEventListener('click',()=>{
+  quantity.value = String(Math.min(20,(Number(quantity.value)||1)+1)); updatePrice();
+});
+document.getElementById('closeModal').addEventListener('click', closeModal);
+modal.addEventListener('click', e=>{ if(e.target.dataset.close==='true') closeModal(); });
+
+/* ============ PANIER ============ */
+const cart = [];
+
+function isDeliverySelected(){
+  const cb = document.getElementById('deliveryCheckbox');
+  return cb ? cb.checked : false;
+}
+function openCart(){
+  renderCart();
+  cartModal.classList.add('open');
+  cartModal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+function closeCart(){
+  cartModal.classList.remove('open');
+  cartModal.setAttribute('aria-hidden','true');
+  refreshBodyLock();
+}
+function refreshBodyLock(){
+  const anyOpen = [modal, cartModal, passwordModal, categoryModal]
+    .some(m=>m.classList.contains('open'));
+  document.body.classList.toggle('modal-open', anyOpen);
+}
+
+function renderCart(){
+  const wrap = document.getElementById('cartItems');
+  wrap.replaceChildren();
+  if(!cart.length){
+    const p = document.createElement('p'); p.className = 'empty-cart';
+    p.textContent = 'Votre panier est vide.'; wrap.appendChild(p);
+  }
+  cart.forEach((item,index)=>{
+    const line = document.createElement('div'); line.className = 'cart-line';
+    const info = document.createElement('div');
+    const title = document.createElement('strong'); title.textContent = item.name;
+    const detail = document.createElement('small');
+    detail.textContent = item.option + ' · ' + fmt(item.price) + ' DA / unité';
+    info.append(title, detail);
+    const amount = document.createElement('strong');
+    amount.textContent = fmt(item.price*item.qty) + ' DA';
+
+    const actions = document.createElement('div'); actions.className='cart-line-actions';
+    const minus = document.createElement('button'); minus.textContent='−';
+    minus.setAttribute('aria-label','Diminuer');
+    minus.onclick = ()=>{ item.qty--; if(item.qty<=0) cart.splice(index,1); renderCart(); };
+    const qty = document.createElement('span'); qty.textContent = String(item.qty);
+    const plus = document.createElement('button'); plus.textContent='+';
+    plus.setAttribute('aria-label','Augmenter');
+    plus.onclick = ()=>{ if(item.qty<99) item.qty++; renderCart(); };
+    const remove = document.createElement('button'); remove.className='remove'; remove.textContent='Supprimer';
+    remove.onclick = ()=>{ cart.splice(index,1); renderCart(); };
+    actions.append(minus,qty,plus,remove);
+    info.appendChild(actions);
+
+    line.append(info, amount);
+    wrap.appendChild(line);
+  });
+
+  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty, 0);
+  const dsel = isDeliverySelected();
+  const delivery = (cart.length && dsel) ? DELIVERY_FEE : 0;
+
+  document.getElementById('cartSubtotal').textContent = fmt(subtotal) + ' DA';
+  document.getElementById('deliveryFee').textContent = fmt(delivery) + ' DA';
+  document.getElementById('cartTotal').textContent = fmt(subtotal + delivery) + ' DA';
+
+  document.getElementById('deliveryRow').style.display = dsel ? 'flex' : 'none';
+  document.getElementById('addressStar').style.display = dsel ? 'inline' : 'none';
+  document.getElementById('cartCount').textContent = String(cart.reduce((s,i)=>s+i.qty,0));
+}
+
+document.getElementById('openCart').addEventListener('click', openCart);
+document.getElementById('closeCart').addEventListener('click', closeCart);
+cartModal.addEventListener('click', e=>{ if(e.target.dataset.cartClose==='true') closeCart(); });
+document.getElementById('deliveryCheckbox').addEventListener('change', renderCart);
+
+document.getElementById('orderButton').addEventListener('click', ()=>{
+  const opt = variantSelect.options[variantSelect.selectedIndex];
+  if(!opt) return;
+  const cat = menuData.find(c=>c.id===currentCatId);
+  if(!cat) return;
+
+  const qty = Math.max(1, Math.min(20, Number(quantity.value)||1));
+  const price = Number(opt.dataset.price);
+  const label = opt.dataset.label;
+
+  const existing = cart.find(i=>i.catId===currentCatId && i.option===label && i.price===price);
+  if(existing) existing.qty = Math.min(99, existing.qty + qty);
+  else cart.push({ catId: currentCatId, name: cat.name, option: label, price, qty });
+
+  closeModal();
+  renderCart();
+  showToast('Ajouté au panier 🛒');
+});
+
+/* ============ VALIDATION ============ */
+function isValidPhone(phone){
+  const cleaned = phone.replace(/[\s\-\.\(\)]/g,'');
+  return /^\+?\d{9,15}$/.test(cleaned);
+}
+
+document.getElementById('checkoutWhatsApp').addEventListener('click', ()=>{
+  if(!cart.length){ showToast('Le panier est vide'); return; }
+
+  const nameInput = document.getElementById('customerName');
+  const phoneInput = document.getElementById('customerPhone');
+  const addressInput = document.getElementById('customerAddress');
+
+  const name = nameInput.value.trim();
+  const phone = phoneInput.value.trim();
+  const address = addressInput.value.trim();
+  const dsel = isDeliverySelected();
+
+  nameInput.classList.remove('invalid');
+  phoneInput.classList.remove('invalid');
+  addressInput.classList.remove('invalid');
+
+  if(!name){ showToast('👤 Nom obligatoire'); nameInput.classList.add('invalid'); nameInput.focus(); return; }
+  if(!phone){ showToast('📞 Téléphone obligatoire'); phoneInput.classList.add('invalid'); phoneInput.focus(); return; }
+  if(!isValidPhone(phone)){ showToast('Numéro de téléphone invalide'); phoneInput.classList.add('invalid'); phoneInput.focus(); return; }
+  if(dsel && !address){ showToast('🏠 Adresse obligatoire'); addressInput.classList.add('invalid'); addressInput.focus(); return; }
+
+  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty, 0);
+  const delivery = dsel ? DELIVERY_FEE : 0;
+  const total = subtotal + delivery;
+
+  let mn = '🛒 NOUVELLE COMMANDE ILYM PIZZA\n\n';
+  cart.forEach((it,i)=>{ mn += (i+1)+'. '+it.name+' — '+it.option+' x'+it.qty+' = '+fmt(it.price*it.qty)+' DA\n'; });
+  mn += '\nSous-total : ' + fmt(subtotal) + ' DA';
+  if(dsel) mn += '\nLivraison : ' + delivery + ' DA';
+  mn += '\nTOTAL : ' + fmt(total) + ' DA';
+  mn += '\n\nMode : ' + (dsel ? '🛵 Livraison' : '🏪 Retrait');
+  mn += '\n👤 ' + name;
+  mn += '\n📞 ' + phone;
+  if(dsel && address) mn += '\n🏠 ' + address;
+  envoyerNotificationNtfy('Nouvelle commande ILYM PIZZA', mn, 'urgent');
+
+  let message = 'Bonjour ILYM PIZZA ! Je souhaite confirmer cette commande :\n';
+  cart.forEach((it,i)=>{
+    message += '\n'+(i+1)+'. '+it.name+' — '+it.option+' x'+it.qty+' = '+fmt(it.price*it.qty)+' DA';
+  });
+  message += '\n\nSous-total : ' + fmt(subtotal) + ' DA';
+  if(dsel) message += '\nLivraison : ' + delivery + ' DA (fixe)';
+  message += '\nTOTAL À PAYER : ' + fmt(total) + ' DA';
+  message += '\n\nMode : ' + (dsel ? '🛵 Livraison à domicile' : '🏪 Retrait sur place');
+  message += '\n👤 Nom : ' + name;
+  message += '\n📞 Téléphone : ' + phone;
+  if(dsel && address) message += '\n🏠 Adresse : ' + address;
+  message += '\n\nMerci de confirmer la disponibilité et le total.';
+  window.open('https://wa.me/213674817474?text='+encodeURIComponent(message), '_blank');
+});
+
+['customerName','customerPhone','customerAddress'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', e=>{
+    e.target.classList.remove('invalid');
+  });
+});
+
+/* ============ ACCÈS ADMIN ============ */
+const secretTrigger = document.getElementById('secretAdminTrigger');
+let pressTimer = null;
+function cancelLongPress(){ if(pressTimer!==null){ clearTimeout(pressTimer); pressTimer=null; } }
+function startLongPress(e){
+  if(e.type==='contextmenu') e.preventDefault();
+  cancelLongPress();
+  pressTimer = setTimeout(()=>{ pressTimer=null; openPasswordModal(); }, 3000);
+}
+secretTrigger.addEventListener('pointerdown', startLongPress);
+secretTrigger.addEventListener('pointerup', cancelLongPress);
+secretTrigger.addEventListener('pointerleave', cancelLongPress);
+secretTrigger.addEventListener('pointercancel', cancelLongPress);
+secretTrigger.addEventListener('contextmenu', e=>e.preventDefault());
+
+function openPasswordModal(){
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('passwordError').textContent = '';
+  passwordModal.classList.add('open');
+  passwordModal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+  setTimeout(()=>document.getElementById('adminPassword').focus(), 100);
+}
+function closePasswordModal(){
+  passwordModal.classList.remove('open');
+  passwordModal.setAttribute('aria-hidden','true');
+  refreshBodyLock();
+}
+document.getElementById('closePassword').addEventListener('click', closePasswordModal);
+passwordModal.addEventListener('click', e=>{ if(e.target.dataset.passwordClose==='true') closePasswordModal(); });
+document.getElementById('adminPassword').addEventListener('input', e=>{
+  e.target.value = e.target.value.replace(/\D/g,'');
+  document.getElementById('passwordError').textContent = '';
+});
+document.getElementById('passwordForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const entered = document.getElementById('adminPassword').value;
+  if(entered === ADMIN_CODE){
+    isAdmin = true;
+    closePasswordModal();
+    renderMenu();
+    showToast('Mode administrateur activé 🔓');
+  }else{
+    document.getElementById('passwordError').textContent = 'Code incorrect. Réessayez.';
+    document.getElementById('adminPassword').value = '';
+    document.getElementById('adminPassword').focus();
+  }
+});
+
+document.getElementById('logoutAdmin').addEventListener('click', ()=>{
+  isAdmin = false;
+  renderMenu();
+  showToast('Mode administrateur désactivé 🔒');
+});
+
+/* ============ ÉDITION CATÉGORIE ============ */
+let editingCategoryId = null;
+let workingOptions = [];
+
+function openCategoryEdit(catId){
+  editingCategoryId = catId || null;
+  const cat = catId ? menuData.find(c=>c.id===catId) : null;
+
+  document.getElementById('categoryEditTitle').textContent =
+    cat ? 'Modifier la catégorie' : 'Ajouter une catégorie';
+  document.getElementById('catName').value = cat ? cat.name : '';
+  document.getElementById('catImage').value = cat ? cat.image : '';
+  document.getElementById('catDesc').value = cat ? (cat.desc || '') : '';
+  document.getElementById('imgUploadStatus').textContent = '';
+
+  workingOptions = cat ? cat.options.map(o=>({...o})) : [];
+  document.getElementById('newOptLabel').value = '';
+  document.getElementById('newOptPrice').value = '';
+
+  renderWorkingOptions();
+
+  categoryModal.classList.add('open');
+  categoryModal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+function closeCategoryModal(){
+  categoryModal.classList.remove('open');
+  categoryModal.setAttribute('aria-hidden','true');
+  refreshBodyLock();
+}
+document.getElementById('closeCategory').addEventListener('click', closeCategoryModal);
+document.getElementById('cancelCategoryBtn').addEventListener('click', closeCategoryModal);
+categoryModal.addEventListener('click', e=>{ if(e.target.dataset.catClose==='true') closeCategoryModal(); });
+
+/* --- Upload image via imgbb --- */
+document.getElementById('catImageFile').addEventListener('change', async e=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('imgUploadStatus');
+  status.textContent = '⏳ Upload en cours...';
+  status.style.color = '#ffc928';
+  try{
+    const url = await uploadToImgbb(file);
+    document.getElementById('catImage').value = url;
+    status.textContent = '✅ Image uploadée avec succès';
+    status.style.color = '#25d366';
+  }catch(err){
+    status.textContent = '❌ Erreur : ' + err.message;
+    status.style.color = '#ff6b6b';
+  }
+  e.target.value = '';
+});
+
+function renderWorkingOptions(){
+  const wrap = document.getElementById('catOptionsList');
+  wrap.replaceChildren();
+
+  if(!workingOptions.length){
+    const p = document.createElement('p');
+    p.className = 'empty-cart';
+    p.textContent = 'Aucun élément. Ajoutez-en ci-dessous.';
+    wrap.appendChild(p);
+    return;
+  }
+
+  workingOptions.forEach((opt, i)=>{
+    const row = document.createElement('div'); row.className = 'opt-row';
+
+    const info = document.createElement('div'); info.className = 'opt-info';
+    const lbl = document.createElement('strong'); lbl.textContent = opt.label;
+    const pr = document.createElement('small'); pr.textContent = fmt(opt.price) + ' DA';
+    info.append(lbl, pr);
+
+    const actions = document.createElement('div'); actions.className = 'opt-actions';
+
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button'; editBtn.textContent = '✏️'; editBtn.title = 'Modifier';
+    editBtn.addEventListener('click', ()=>{
+      const newLabel = prompt("Nom de l'élément :", opt.label);
+      if(newLabel === null) return;
+      const newPrice = prompt("Prix (DA) :", opt.price);
+      if(newPrice === null) return;
+      opt.label = newLabel.trim() || opt.label;
+      opt.price = Math.max(0, Number(newPrice) || opt.price);
+      renderWorkingOptions();
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button'; delBtn.textContent = '🗑️'; delBtn.title = 'Supprimer';
+    delBtn.addEventListener('click', ()=>{
+      workingOptions.splice(i,1);
+      renderWorkingOptions();
+    });
+
+    actions.append(editBtn, delBtn);
+    row.append(info, actions);
+    wrap.appendChild(row);
+  });
+}
+
+document.getElementById('addOptionBtn').addEventListener('click', ()=>{
+  const lblInput = document.getElementById('newOptLabel');
+  const prInput = document.getElementById('newOptPrice');
+  const label = lblInput.value.trim();
+  const price = Number(prInput.value);
+
+  if(!label){ showToast("Nom de l'élément obligatoire"); lblInput.focus(); return; }
+  if(!Number.isFinite(price) || price < 0){ showToast('Prix invalide'); prInput.focus(); return; }
+
+  workingOptions.push({ id: uid('opt'), label, price });
+  lblInput.value = '';
+  prInput.value = '';
+  lblInput.focus();
+  renderWorkingOptions();
+});
+
+document.getElementById('saveCategoryBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('catName').value.trim();
+  const image = document.getElementById('catImage').value.trim();
+  const desc = document.getElementById('catDesc').value.trim();
+
+  if(!name){ showToast('Nom obligatoire'); return; }
+  if(!image){ showToast("Image obligatoire"); return; }
+  if(!workingOptions.length){ showToast('Ajoutez au moins un élément'); return; }
+
+  if(editingCategoryId){
+    const cat = menuData.find(c=>c.id===editingCategoryId);
+    if(cat){
+      cat.name = name;
+      cat.image = image;
+      cat.desc = desc;
+      cat.options = workingOptions.map(o=>({...o}));
+    }
+  }else{
+    menuData.push({
+      id: uid('cat'),
+      name, image, desc,
+      options: workingOptions.map(o=>({...o}))
+    });
+  }
+
+  saveMenu();
+  closeCategoryModal();
+  renderMenu();
+  showToast('Catégorie enregistrée ✅');
+});
+
+function deleteCategory(catId){
+  const cat = menuData.find(c=>c.id===catId);
+  if(!cat) return;
+  menuData = menuData.filter(c=>c.id !== catId);
+  saveMenu();
+  renderMenu();
+  showToast('Catégorie supprimée 🗑️');
+}
+
+document.getElementById('addCategoryBtn').addEventListener('click', ()=>{
+  openCategoryEdit(null);
+});
+
+/* ============ COPIER HTML (avec données actuelles) ============ */
+async function copyAppHTML(){
+  closeModal(); closeCart(); closePasswordModal(); closeCategoryModal();
+
+  document.getElementById('mainMenu').replaceChildren();
+  document.getElementById('adminBanner').hidden = true;
+  document.getElementById('addCategoryBtn').hidden = true;
+
+  cart.length = 0;
+  renderCart();
+
+  toast.classList.remove('show');
+  toast.textContent = '';
+
+  await new Promise(r=>setTimeout(r, 80));
+
+  let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+  const startMarker = '/*__DEFAULT_MENU_START__*/';
+  const endMarker = '/*__DEFAULT_MENU_END__*/';
+  const s = html.indexOf(startMarker);
+  const e = html.indexOf(endMarker);
+
+  if(s === -1 || e === -1){
+    showToast('❌ Marqueurs introuvables');
+    renderMenu();
+    return;
+  }
+
+  const before = html.slice(0, s + startMarker.length);
+  const after = html.slice(e);
+  const newData = '\nconst DEFAULT_MENU = ' + JSON.stringify(menuData, null, 1) + ';\n';
+  html = before + newData + after;
+
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(html);
+    }else{
+      const ta = document.createElement('textarea');
+      ta.value = html;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    showToast('📋 HTML copié (' + Math.round(html.length/1024) + ' Ko)');
+  }catch(err){
+    console.error(err);
+    showToast('❌ Copie impossible');
+  }
+
+  renderMenu();
+  renderCart();
+}
+
+document.getElementById('copyHtmlBtn').addEventListener('click', copyAppHTML);
+
+/* ============ CLAVIER ============ */
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){
+    closeModal(); closeCart(); closePasswordModal(); closeCategoryModal();
+  }
+});
+
+/* ============ SERVICE WORKER ============ */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err=>console.error('SW error:', err));
+  });
+}
+
+/* ============ INITIALISATION ============ */
+renderMenu();
+renderCart();
+</script>
+</body></html>
